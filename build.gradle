@@ -13,6 +13,8 @@ dependencies {
 	
 	compile 'org.slf4j:slf4j-api:1.7.6'
 	runtime 'org.slf4j:slf4j-jdk14:1.7.6'
+	
+	compile 'commons-configuration:commons-configuration:1.10'
 }
 
 // tag::wrapper[]
