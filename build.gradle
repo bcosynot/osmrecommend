@@ -1,0 +1,14 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+
+dependencies {
+	
+	compile 'org.openstreetmap.osmosis:osmosis-core:0.43-RELEASE'
+	compile 'org.openstreetmap.osmosis:osmosis-pgsimple:0.43-RELEASE'
+}
+
+// tag::wrapper[]
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.11'
+}
