@@ -8,6 +8,8 @@ dependencies {
 	
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43-RELEASE'
 	compile 'org.openstreetmap.osmosis:osmosis-pgsimple:0.43-RELEASE'
+	
+	compile 'org.grouplens.lenskit:lenskit:2.0.5'
 }
 
 // tag::wrapper[]
