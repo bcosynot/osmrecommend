@@ -10,6 +10,9 @@ dependencies {
 	compile 'org.openstreetmap.osmosis:osmosis-pgsimple:0.43-RELEASE'
 	
 	compile 'org.grouplens.lenskit:lenskit-all:2.1-M2'
+	
+	compile 'org.slf4j:slf4j-api:1.7.6'
+	runtime 'org.slf4j:slf4j-jdk14:1.7.6'
 }
 
 // tag::wrapper[]
