@@ -4,12 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@Table(name = "node_tags")
-public class NodeTag {
+@Table(name = "way_tags")
+public class WayTag {
 
 	@OneToOne
-	@Column(name = "node_id")
-	private Node node;
+	@Column(name = "way_id")
+	private Way way;
 	
 	@Column(name = "k")
 	private String k;
@@ -17,12 +17,12 @@ public class NodeTag {
 	@Column(name = "v")
 	private String v;
 
-	public Node getNode() {
-		return node;
+	public Way getNode() {
+		return way;
 	}
 
-	public void setNode(Node node) {
-		this.node = node;
+	public void setNode(Way way) {
+		this.way = way;
 	}
 
 	public String getK() {

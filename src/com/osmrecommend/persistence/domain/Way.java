@@ -1,5 +1,6 @@
 package com.osmrecommend.persistence.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,7 +15,12 @@ import org.postgis.PGgeometry;
 
 @Entity
 @Table(name = "ways")
-public class Way {
+public class Way implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 705971055750956266L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
