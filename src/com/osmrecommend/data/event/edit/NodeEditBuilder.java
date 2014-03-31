@@ -1,8 +1,6 @@
 package com.osmrecommend.data.event.edit;
 
 import org.apache.commons.lang3.builder.Builder;
-import org.grouplens.lenskit.data.event.RatingBuilder;
-import org.openstreetmap.osmosis.core.domain.common.SimpleTimestampContainer;
 
 public class NodeEditBuilder implements Builder<NodeEdit> {
 	
@@ -10,7 +8,7 @@ public class NodeEditBuilder implements Builder<NodeEdit> {
     private int userId;
     private boolean hasItemId;
     private long itemId;
-    private SimpleTimestampContainer timestamp;
+    private long timestamp;
 
 	/**
 	 * @return the hasUserId
@@ -68,17 +66,19 @@ public class NodeEditBuilder implements Builder<NodeEdit> {
 		this.itemId = itemId;
 	}
 
+	
+
 	/**
 	 * @return the timestamp
 	 */
-	public SimpleTimestampContainer getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 
 	/**
 	 * @param timestamp the timestamp to set
 	 */
-	public void setTimestamp(SimpleTimestampContainer timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 
