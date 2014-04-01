@@ -4,8 +4,11 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.osmrecommend.persistence.domain.Way;
 
+@Service
 public interface WayService {
 
 public Iterable<Way> getAllWays();
