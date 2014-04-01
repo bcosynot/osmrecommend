@@ -4,9 +4,12 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.User;
 
+@Service
 public interface NodeService {
 
 	public Iterable<Node> getAllNodes();

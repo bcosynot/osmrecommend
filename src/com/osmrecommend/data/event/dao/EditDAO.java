@@ -9,6 +9,8 @@ import org.grouplens.lenskit.cursors.Cursors;
 import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.SortOrder;
 import org.grouplens.lenskit.data.event.Event;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.osmrecommend.data.event.edit.NodeEdit;
 import com.osmrecommend.data.event.edit.WayEdit;
@@ -19,9 +21,13 @@ import com.osmrecommend.persistence.service.NodeService;
 import com.osmrecommend.persistence.service.WayPersistenceServiceImpl;
 import com.osmrecommend.persistence.service.WayService;
 
+@Configurable
 public class EditDAO implements EventDAO {
 
+	@Autowired
 	NodeService nodeService;
+	
+	@Autowired
 	WayService wayService;
 	
 	@Override
@@ -39,7 +45,7 @@ public class EditDAO implements EventDAO {
 		// Get all ways
 		for(Way way : wayService.getAllWays()) {
 			
-			allEdits.add(new WayEdit(way));
+			allEdits.add((Event) new WayEdit(way));
 			
 		}
 		
