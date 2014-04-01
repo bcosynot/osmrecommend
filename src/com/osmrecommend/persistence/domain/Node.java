@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.postgis.PGgeometry;
@@ -29,7 +31,9 @@ public class Node implements Serializable {
 	@Column(name = "version")
 	private Integer version;
 	
-	@Column(name = "user_id")
+	//@Column(name = "user_id")
+	@OneToOne
+	@PrimaryKeyJoinColumn
 	private User user;
 	
 	@Column(name = "tsamp")

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.postgis.PGgeometry;
@@ -31,7 +32,8 @@ public class Way implements Serializable {
 	private Integer version;
 	
 	@OneToOne
-	@Column(name = "user_id")
+	@PrimaryKeyJoinColumn
+	//@Column(name = "user_id")
 	private User user;
 	
 	@Column(name = "tstamp")
