@@ -11,6 +11,7 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,9 +22,16 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.osmrecommend.data.event.dao.EditDAO;
+import com.osmrecommend.persistence.service.NodePersistenceServiceImp;
+import com.osmrecommend.persistence.service.NodeService;
+import com.osmrecommend.persistence.service.WayPersistenceServiceImpl;
+import com.osmrecommend.persistence.service.WayService;
+
 
 @Configuration
 @EnableJpaRepositories(basePackages = "com.osmrecommend.persistence.repositories")
+@ComponentScan(basePackages = "com.osmrecommend")
 public class JPAConfiguration {
 	
 	@Bean
@@ -39,7 +47,7 @@ public class JPAConfiguration {
 		
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {
-			config.addConfiguration(new PropertiesConfiguration("db.properties"));
+			config.addConfiguration(new PropertiesConfiguration("app.properties"));
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
@@ -52,11 +60,10 @@ public class JPAConfiguration {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 	    vendorAdapter.setGenerateDdl(true);
 	    vendorAdapter.setDatabase(Database.POSTGRESQL);
-	    vendorAdapter.setShowSql(true);
 
 	    LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 	    factory.setJpaVendorAdapter(vendorAdapter);
-	    factory.setPackagesToScan("com.osmrecommend.persistence.domain");
+	    factory.setPackagesToScan("com.osmrecommend.persistence");
 	    DriverManagerDataSource ds = dataSource();
 	    ds.setDriverClassName(dbConnectionConfig.getDriverClass());
 	    ds.setUsername(dbConnectionConfig.getUser());
@@ -65,36 +72,44 @@ public class JPAConfiguration {
 	    factory.setDataSource(ds);
 	    factory.setJpaPropertyMap(dbConnectionProperties);
 	    factory.afterPropertiesSet();
-	    //factory.get
-
-	   /* EntityManagerFactory emf = factory.getObject();
 	    
-	    try {
-			emf.createEntityManager();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 	    
 	    return factory.getObject();
 		
 	}
 	
 	@Bean
-	  public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
-	    return entityManagerFactory.createEntityManager();
-	  }
+	public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+		return entityManagerFactory.createEntityManager();
+	}
 
-	  @Bean
-	  public PlatformTransactionManager transactionManager() throws SQLException {
+	@Bean
+	public PlatformTransactionManager transactionManager() throws SQLException {
 
-	    JpaTransactionManager txManager = new JpaTransactionManager();
-	    txManager.setEntityManagerFactory(entityManagerFactory());
-	    return txManager;
-	  }
+		JpaTransactionManager txManager = new JpaTransactionManager();
+		txManager.setEntityManagerFactory(entityManagerFactory());
+		return txManager;
+	}
 
-	  @Bean
-	  public HibernateExceptionTranslator hibernateExceptionTranslator() {
-	    return new HibernateExceptionTranslator();
-	  }
-	  
+	@Bean
+	public HibernateExceptionTranslator hibernateExceptionTranslator() {
+		return new HibernateExceptionTranslator();
+	}
+	
+	@Bean
+	public NodeService nodeService() {
+		return new NodePersistenceServiceImp();
+	}
+	
+	@Bean
+	public WayService wayService() {
+		return new WayPersistenceServiceImpl();
+	}
+	
+	@Bean
+	public EditDAO editDAO() {
+		return new EditDAO();
+	}
+	
+	
 }
