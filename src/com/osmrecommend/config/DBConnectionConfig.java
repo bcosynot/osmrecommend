@@ -8,19 +8,35 @@ public class DBConnectionConfig {
 
 	private String host;
 	
+	private static String DEFAULT_HOST = "localhost";
+	
 	private String database;
+	
+	private static String DEFAULT_DATABASE = "osm";
 	
 	private String user;
 	
+	private static String DEFAULT_USER = "osm";
+	
 	private String password;
+	
+	private static String DEFAULT_PASSWORD = "osm";
 	
 	private String schema;
 	
+	private static String DEFAULT_SCHEMA = "public";
+	
 	private String driverClassName;
+	
+	private static String DEFAULT_DRIVER_CLASS_NAME = "org.postgresql.Driver";
 	
 	private String databaseType;
 	
+	private static String DEFAULT_DATABASE_TYPE = "postgresql";
+	
 	private String port;
+	
+	private static String DEFAULT_PORT = "5432";
 	
 	/**
 	 * @param host
@@ -48,15 +64,15 @@ public class DBConnectionConfig {
 		setDefaults();
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {
-			config.addConfiguration(new PropertiesConfiguration("db.properties"));
-			host = config.getString("postgresHost");
-			database = config.getString("postgresDB");
-			user = config.getString("postgresUser");
-			password = config.getString("postgresPassword");
-			schema = config.getString("defaultSchema");
-			driverClassName = config.getString("driverClass");
-			databaseType = config.getString("databaseType");
-			port = config.getString("port");
+			config.addConfiguration(new PropertiesConfiguration("app.properties"));
+			if(null != config.getString("postgresHost")) setHost(config.getString("postgresHost"));
+			if(null != config.getString("port")) setPort(config.getString("port"));
+			if(null != config.getString("postgresDB")) setDatabase(config.getString("postgresDB"));
+			if(null != config.getString("postgresUser")) setUser(config.getString("postgresUser"));
+			if(null != config.getString("postgresPassword")) setPassword(config.getString("postgresPassword"));
+			if(null != config.getString("defaultSchema")) setSchema(config.getString("defaultSchema"));
+			if(null != config.getString("driverClass")) setDriverClass(config.getString("driverClass"));
+			if(null != config.getString("databaseType")) setDatabaseType(config.getString("databaseType"));							
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 			setDefaults();
@@ -66,14 +82,14 @@ public class DBConnectionConfig {
 
 	private void setDefaults() {
 		
-		host = "localhost";
-		database = "osm";
-		user = "osm";
-		password = "";
-		schema = "public";
-		driverClassName = "org.postgresql.Driver";
-		databaseType = "postgresql";
-		port = "3306";
+		host = DEFAULT_HOST;
+		database = DEFAULT_DATABASE;
+		user = DEFAULT_USER;
+		password = DEFAULT_PASSWORD;
+		schema = DEFAULT_SCHEMA;
+		driverClassName = DEFAULT_DRIVER_CLASS_NAME;
+		databaseType = DEFAULT_DATABASE_TYPE;
+		port = DEFAULT_PORT;
 	}
 	
 	public String getConnectionURL() {
@@ -112,7 +128,13 @@ public class DBConnectionConfig {
 	 * @param host the host to set
 	 */
 	public void setHost(String host) {
-		this.host = host;
+		
+		if(host.length() > 0) {
+			this.host =host ;
+		} else {
+			this.host = DEFAULT_HOST;
+		}
+		
 	}
 
 	/**
@@ -126,7 +148,13 @@ public class DBConnectionConfig {
 	 * @param database the database to set
 	 */
 	public void setDatabase(String database) {
-		this.database = database;
+
+		if(database.length() > 0) {
+			this.database = database;
+		} else {
+			this.database = DEFAULT_DATABASE;
+		}
+		
 	}
 
 	/**
@@ -140,7 +168,13 @@ public class DBConnectionConfig {
 	 * @param user the user to set
 	 */
 	public void setUser(String user) {
-		this.user = user;
+
+		if(user.length() > 0) {
+			this.user = user;
+		} else {
+			this.user = DEFAULT_USER;
+		}
+		
 	}
 
 	/**
@@ -154,7 +188,13 @@ public class DBConnectionConfig {
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
-		this.password = password;
+
+		if(password.length() > 0) {
+			this.password = password;
+		} else {
+			this.password = DEFAULT_PASSWORD;
+		}
+		
 	}
 
 	/**
@@ -168,7 +208,13 @@ public class DBConnectionConfig {
 	 * @param schema the schema to set
 	 */
 	public void setSchema(String schema) {
-		this.schema = schema;
+
+		if(schema.length() > 0) {
+			this.schema = schema;
+		} else {
+			this.schema = DEFAULT_SCHEMA;
+		}
+		
 	}
 
 	public String getDriverClass() {
@@ -184,7 +230,13 @@ public class DBConnectionConfig {
 	}
 
 	public void setDatabaseType(String databaseType) {
-		this.databaseType = databaseType;
+		
+		if(databaseType.length() > 0) {
+			this.databaseType = databaseType;
+		} else {
+			this.databaseType = DEFAULT_DATABASE_TYPE;
+		}
+		
 	}
 
 	public String getPort() {
@@ -192,7 +244,13 @@ public class DBConnectionConfig {
 	}
 
 	public void setPort(String port) {
-		this.port = port;
+		
+		if(port.length() > 0) {
+			this.port = port;
+		} else {
+			this.port = DEFAULT_PORT;
+		}
+		
 	}
 	
 	
