@@ -3,7 +3,7 @@ package com.osmrecommend.data.event.edit;
 import com.osmrecommend.data.event.Edit;
 import com.osmrecommend.persistence.domain.Node;
 
-public class NodeEdit implements Edit {
+public class NodeEdit extends Edit {
 	
 	Node node;
 

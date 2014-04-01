@@ -3,7 +3,7 @@ package com.osmrecommend.data.event.edit;
 import com.osmrecommend.data.event.Edit;
 import com.osmrecommend.persistence.domain.Way;
 
-public class WayEdit implements Edit {
+public class WayEdit extends Edit {
 
 	private Way way;
 	
