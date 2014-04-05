@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.persistence.domain.WayTag;
 import com.osmrecommend.persistence.repositories.WayRepository;
 import com.osmrecommend.persistence.repositories.WayTagRepository;
 
-@Service
+@Component
 public class WayPersistenceServiceImpl implements WayService {
 
 	@Autowired

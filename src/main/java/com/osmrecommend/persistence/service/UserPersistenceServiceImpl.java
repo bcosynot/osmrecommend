@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.grouplens.lenskit.collections.LongUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.UserRepository;
 
-@Service
+@Component
 public class UserPersistenceServiceImpl implements UserService {
 
 	@Autowired

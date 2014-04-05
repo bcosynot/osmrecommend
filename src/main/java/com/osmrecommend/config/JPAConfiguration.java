@@ -12,7 +12,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateExceptionTranslator;
@@ -22,14 +21,10 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.osmrecommend.dao.NodeDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
-import com.osmrecommend.persistence.service.NodePersistenceServiceImp;
-import com.osmrecommend.persistence.service.NodeService;
-import com.osmrecommend.persistence.service.WayPersistenceServiceImpl;
-import com.osmrecommend.persistence.service.WayService;
 
 
-@Configuration
 @EnableJpaRepositories(basePackages = "com.osmrecommend.persistence.repositories")
 @ComponentScan(basePackages = "com.osmrecommend")
 public class JPAConfiguration {
@@ -96,9 +91,9 @@ public class JPAConfiguration {
 		return new HibernateExceptionTranslator();
 	}
 	
-	@Bean
+	/*@Bean
 	public NodeService nodeService() {
-		return new NodePersistenceServiceImp();
+		return new NodePersistenceServiceImpl();
 	}
 	
 	@Bean
@@ -107,8 +102,18 @@ public class JPAConfiguration {
 	}
 	
 	@Bean
+	public UserService userService() {
+		return new UserPersistenceServiceImpl();
+	}*/
+	
+	@Bean
 	public EditDAO editDAO() {
 		return new EditDAO();
+	}
+	
+	@Bean
+	public NodeDAO nodeDAO() {
+		return new NodeDAO();
 	}
 	
 	

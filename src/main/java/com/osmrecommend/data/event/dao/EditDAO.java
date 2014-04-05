@@ -10,18 +10,16 @@ import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.SortOrder;
 import org.grouplens.lenskit.data.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
 
 import com.osmrecommend.data.event.edit.NodeEdit;
 import com.osmrecommend.data.event.edit.WayEdit;
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.Way;
-import com.osmrecommend.persistence.service.NodePersistenceServiceImp;
 import com.osmrecommend.persistence.service.NodeService;
-import com.osmrecommend.persistence.service.WayPersistenceServiceImpl;
 import com.osmrecommend.persistence.service.WayService;
 
-@Configurable
+@Component
 public class EditDAO implements EventDAO {
 
 	@Autowired
@@ -96,13 +94,13 @@ public class EditDAO implements EventDAO {
 	/**
 	 * 
 	 */
-	public EditDAO() {
+	/*public EditDAO() {
 		super();
 		
-		nodeService = new NodePersistenceServiceImp();
+		nodeService = new NodePersistenceServiceImpl();
 		wayService = new WayPersistenceServiceImpl();
 		
-	}
+	}*/
 	
 	
 

@@ -20,7 +20,11 @@ public interface NodeService {
 	
 	public Map<String, String> getTagsForNode(Node node);
 	
+	public Map<String, String> getTagsForNodeId(Long nodeId);
+	
 	public LongSet getAllUserIds();
 	
 	public Iterable<Node> getAllByUser(User user);
+	
+	public Map<String, String> getAllTags();
 }
