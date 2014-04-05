@@ -7,12 +7,12 @@ import javax.inject.Inject;
 
 import org.grouplens.lenskit.basic.AbstractItemScorer;
 import org.grouplens.lenskit.data.dao.UserEventDAO;
-import org.grouplens.lenskit.data.event.Rating;
-import org.grouplens.lenskit.data.pref.Preference;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
 import org.grouplens.lenskit.vectors.SparseVector;
 import org.grouplens.lenskit.vectors.VectorEntry;
 import org.springframework.beans.factory.annotation.Configurable;
+
+import com.osmrecommend.data.event.edit.NodeEdit;
 
 /**
  * @author <a href="http://www.grouplens.org">GroupLens Research</a>
@@ -80,8 +80,8 @@ public class TFIDFItemScorer extends AbstractItemScorer {
 
     private SparseVector makeUserVector(long user) {
         // Get the user's ratings
-        List<Rating> userRatings = dao.getEventsForUser(user, Rating.class);
-        if (userRatings == null) {
+        List<NodeEdit> userEvent = dao.getEventsForUser(user, NodeEdit.class);
+        if (userEvent == null) {
             // the user doesn't exist
             return SparseVector.empty();
         }
@@ -92,21 +92,21 @@ public class TFIDFItemScorer extends AbstractItemScorer {
         profile.fill(0);
         
         // For 2nd part, calculate the mean of the user's rating
-        double mean=0d;
-        for(Rating r: userRatings) {
-        	mean=mean+r.getPreference().getValue();
+        /*double mean=0d;
+        for(NodeEdit e: userEvent) {
+        	mean=mean+e.getPreference().getValue();
         }
-        mean=mean/userRatings.size();
+        mean=mean/userEvent.size();*/
         // Iterate over the user's ratings to build their profile
-        for (Rating r: userRatings) {
+        for (NodeEdit e: userEvent) {
             // In LensKit, ratings are expressions of preference
-            Preference p = r.getPreference();
+            //Preference p = e.getPreference();
             // We'll never have a null preference. But in LensKit, ratings can have null
             // preferences to express the user unrating an item
-            if (p != null && p.getValue() >= 3.5) {
+            if (e != null) {
                 // The user likes this item!
                 // TODO Get the item's vector and add it to the user's profile
-            	SparseVector iv = model.getItemVector(p.getItemId());
+            	SparseVector iv = model.getItemVector(e.getItemId());
 				profile.add(iv);
             }
             
