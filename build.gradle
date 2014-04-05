@@ -5,6 +5,11 @@ apply plugin:'application'
 repositories {
 	mavenCentral()
 }
+
+configurations {
+	lenskiteval
+}
+
 dependencies {
 	
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43-RELEASE'
@@ -22,11 +27,17 @@ dependencies {
 	runtime 'org.slf4j:slf4j-jdk14:1.7.6'
 	
 	compile 'commons-configuration:commons-configuration:1.10'
+	lenskiteval 'org.grouplens.lenskit:lenskit-eval:2.1-M2'
 }
 
 // tag::wrapper[]
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.11'
+}
+
+task lenskitEval(type: JavaExec) {
+	classpath configurations.lenskiteval
+	main 'org.grouplens.lenskit.eval.cli.EvalCLI'
 }
 
 mainClassName = "com.osmrecommend.app.OSMRecommend"
