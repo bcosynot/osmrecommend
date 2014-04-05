@@ -41,12 +41,12 @@ public class EditDAO implements EventDAO {
 			
 		}
 		
-		// Get all ways
+		/*// Get all ways
 		for(Way way : wayService.getAllWays()) {
 			
 			allEdits.add(new WayEdit(way));
 			
-		}
+		}*/
 		
 		return Cursors.wrap(allEdits);
 	}
@@ -71,7 +71,7 @@ public class EditDAO implements EventDAO {
 
 			}
 			
-		} else if (type == WayEdit.class) {
+		}/* else if (type == WayEdit.class) {
 
 			// Get all ways
 			for(Way way : wayService.getAllWays()) {
@@ -79,7 +79,7 @@ public class EditDAO implements EventDAO {
 				allEdits.add(new WayEdit(way));
 
 			}
-		}
+		}*/
 		
 		Comparator<Event> comp = order.getEventComparator();
 		Cursor<Event> cursor = Cursors.wrap(allEdits);
