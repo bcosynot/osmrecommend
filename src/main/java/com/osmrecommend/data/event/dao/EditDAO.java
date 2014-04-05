@@ -49,7 +49,7 @@ public class EditDAO implements EventDAO {
 			
 		}
 		
-		return (Cursor<Event>) allEdits.iterator();
+		return Cursors.wrap(allEdits);
 	}
 
 	@Override
@@ -60,6 +60,7 @@ public class EditDAO implements EventDAO {
 	@Override
 	public <E extends Event> Cursor<E> streamEvents(Class<E> type,
 			SortOrder order) {
+		
 		List<Event> allEdits = new ArrayList<Event>();
 
 		if(type == NodeEdit.class) {
@@ -82,7 +83,7 @@ public class EditDAO implements EventDAO {
 		}
 		
 		Comparator<Event> comp = order.getEventComparator();
-		Cursor<Event> cursor = (Cursor<Event>) allEdits.iterator();
+		Cursor<Event> cursor = Cursors.wrap(allEdits);
 		
 		if (comp == null) {
             return (Cursor<E>) cursor;
