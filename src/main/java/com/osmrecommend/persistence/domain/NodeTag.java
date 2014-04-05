@@ -51,5 +51,13 @@ public class NodeTag {
 	public void setV(String v) {
 		this.v = v;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 }
