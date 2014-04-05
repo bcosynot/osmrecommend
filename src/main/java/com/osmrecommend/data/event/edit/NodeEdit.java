@@ -46,7 +46,6 @@ public class NodeEdit extends Edit {
 
 	public NodeEdit() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

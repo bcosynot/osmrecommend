@@ -43,7 +43,7 @@ public class EditDAO implements EventDAO {
 		// Get all ways
 		for(Way way : wayService.getAllWays()) {
 			
-			allEdits.add((Event) new WayEdit(way));
+			allEdits.add(new WayEdit(way));
 			
 		}
 		
