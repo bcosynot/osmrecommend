@@ -63,7 +63,7 @@ public class OSMRecommend {
 			List<ScoredId> recommendations = irec.recommend(1538030, 5);
 			log.info("recos fetched");
 			for(ScoredId scoredId : recommendations) {
-				System.out.println(scoredId.getId() +" - "+scoredId.getScore());
+				log.info(scoredId.getId() +" - "+scoredId.getScore());
 			}
 		} catch (RecommenderBuildException e) {
 			// TODO Auto-generated catch block
