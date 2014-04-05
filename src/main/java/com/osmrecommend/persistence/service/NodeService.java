@@ -1,8 +1,7 @@
 package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
 import org.springframework.stereotype.Service;
 
@@ -18,13 +17,13 @@ public interface NodeService {
 	
 	public LongSet getAllNodeIDs();
 	
-	public Map<String, String> getTagsForNode(Node node);
+	public Object2ObjectMap<String, String> getTagsForNode(Node node);
 	
-	public Map<String, String> getTagsForNodeId(Long nodeId);
+	public Object2ObjectMap<String, String> getTagsForNodeId(Long nodeId);
 	
 	public LongSet getAllUserIds();
 	
 	public Iterable<Node> getAllByUser(User user);
 	
-	public Map<String, String> getAllTags();
+	public Object2ObjectMap<String, String> getAllTags();
 }

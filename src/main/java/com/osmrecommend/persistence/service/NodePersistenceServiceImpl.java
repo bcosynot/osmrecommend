@@ -2,11 +2,10 @@ package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +53,12 @@ public class NodePersistenceServiceImpl implements NodeService {
 	}
 
 	@Override
-	public Map<String, String> getTagsForNode(Node node) {
+	public Object2ObjectMap<String, String> getTagsForNode(Node node) {
 		
-		List<Node> nodes = new ArrayList<Node>();
+		ObjectList<Node> nodes = new ObjectArrayList<Node>();
 		nodes.add(node);
 		
-		Map<String, String> tags = new HashMap<String, String>();
+		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
 		
 		for(NodeTag nodeTag : tagRepo.findAll(nodes)) {
 			
@@ -92,19 +91,19 @@ public class NodePersistenceServiceImpl implements NodeService {
 	}
 
 	@Override
-	public Map<String, String> getTagsForNodeId(Long nodeId) {
+	public Object2ObjectMap<String, String> getTagsForNodeId(Long nodeId) {
 		return getTagsForNode(repo.findOne(nodeId));
 	}
 
 	@Override
-	public Map<String, String> getAllTags() {
+	public Object2ObjectMap<String, String> getAllTags() {
 		
 		if(null == tagRepo) {
 			log.info("tagRepo is null");
 		} else {
 			log.info("tagrepo isn't null");
 		}
-		Map<String, String> tags = new HashMap<String, String>();
+		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
 		
 		for(NodeTag nodeTag : tagRepo.findAll()) {
 			

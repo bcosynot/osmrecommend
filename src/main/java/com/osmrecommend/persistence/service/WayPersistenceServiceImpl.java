@@ -2,11 +2,10 @@ package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,12 +48,12 @@ public class WayPersistenceServiceImpl implements WayService {
 	}
 
 	@Override
-	public Map<String, String> getTagsForNode(Way node) {
+	public Object2ObjectMap<String, String> getTagsForNode(Way node) {
 
-		List<Way> ways = new ArrayList<Way>();
+		ObjectList<Way> ways = new ObjectArrayList<Way>();
 		ways.add(node);
 		
-		Map<String, String> tags = new HashMap<String, String>();
+		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
 		
 		for(WayTag wayTag : tagRepo.findAll(ways)) {
 			

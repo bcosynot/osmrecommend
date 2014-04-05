@@ -1,8 +1,7 @@
 package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public Iterable<Way> getAllWays();
 	
 	public Iterable<Long> getAllWayIDs();
 	
-	public Map<String, String> getTagsForNode(Way node);
+	public Object2ObjectMap<String, String> getTagsForNode(Way node);
 	
 	public LongSet getAllUserIds();
 	

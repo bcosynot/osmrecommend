@@ -1,8 +1,9 @@
 package com.osmrecommend.data.event.dao;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+
 import java.util.Comparator;
-import java.util.List;
 
 import org.grouplens.lenskit.cursors.Cursor;
 import org.grouplens.lenskit.cursors.Cursors;
@@ -31,7 +32,7 @@ public class EditDAO implements EventDAO {
 	@Override
 	public Cursor<Event> streamEvents() {
 
-		List<Event> allEdits = new ArrayList<Event>();
+		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
 		// Get all nodes
 		for(Node node : nodeService.getAllNodes()) {
@@ -59,7 +60,7 @@ public class EditDAO implements EventDAO {
 	public <E extends Event> Cursor<E> streamEvents(Class<E> type,
 			SortOrder order) {
 		
-		List<Event> allEdits = new ArrayList<Event>();
+		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
 		if(type == NodeEdit.class) {
 			

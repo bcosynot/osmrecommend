@@ -1,9 +1,8 @@
 package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-
-import java.util.ArrayList;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.grouplens.lenskit.collections.LongUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class UserPersistenceServiceImpl implements UserService {
 	@Override
 	public LongSet getAllUserIDs() {
 		
-		List<Long> userIds = new ArrayList<Long>();
+		ObjectList<Long> userIds = new ObjectArrayList<Long>();
 		
 		for(User user : repo.findAll()) {
 			

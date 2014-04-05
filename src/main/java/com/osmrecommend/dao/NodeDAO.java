@@ -1,11 +1,11 @@
 package com.osmrecommend.dao;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -30,11 +30,11 @@ public class NodeDAO implements ItemDAO {
 		return service.getAllNodeIDs();
 	}
 	
-	public List<String> getItemTags(long item) {
+	public ObjectList<String> getItemTags(long item) {
 		
-		List<String> itemTags = new ArrayList<String>();
+		ObjectList<String> itemTags = new ObjectArrayList<String>();
 		
-		Map<String, String> mapOfItemTags = service.getTagsForNodeId(item);
+		Object2ObjectMap<String, String> mapOfItemTags = service.getTagsForNodeId(item);
 		
 		for(Entry<String, String> entry : mapOfItemTags.entrySet()) {
 		
@@ -49,7 +49,7 @@ public class NodeDAO implements ItemDAO {
 		
 		Set<String> tagVocabulary = new HashSet<String>();
 		
-		Map<String, String> mapOfItemTags = null;
+		Object2ObjectMap<String, String> mapOfItemTags = null;
 		
 		if(null == service) {
 			log.info("service is null.");
