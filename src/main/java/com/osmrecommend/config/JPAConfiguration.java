@@ -21,6 +21,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.osmrecommend.dao.AreaDAO;
 import com.osmrecommend.dao.NodeDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
 
@@ -51,6 +52,7 @@ public class JPAConfiguration {
 		
 		Map<String, String> dbConnectionProperties = new HashMap<String, String>();
 		dbConnectionProperties.put("hibernate.default_schema", dbConnectionConfig.getSchema());
+		dbConnectionProperties.put("hibernate.dialect", "org.hibernate.spatial.dialect.postgis.PostgisDialect");
 		
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 	    vendorAdapter.setGenerateDdl(true);
@@ -91,21 +93,6 @@ public class JPAConfiguration {
 		return new HibernateExceptionTranslator();
 	}
 	
-	/*@Bean
-	public NodeService nodeService() {
-		return new NodePersistenceServiceImpl();
-	}
-	
-	@Bean
-	public WayService wayService() {
-		return new WayPersistenceServiceImpl();
-	}
-	
-	@Bean
-	public UserService userService() {
-		return new UserPersistenceServiceImpl();
-	}*/
-	
 	@Bean
 	public EditDAO editDAO() {
 		return new EditDAO();
@@ -114,6 +101,11 @@ public class JPAConfiguration {
 	@Bean
 	public NodeDAO nodeDAO() {
 		return new NodeDAO();
+	}
+	
+	@Bean
+	public AreaDAO areaDAO() {
+		return new AreaDAO();
 	}
 	
 	
