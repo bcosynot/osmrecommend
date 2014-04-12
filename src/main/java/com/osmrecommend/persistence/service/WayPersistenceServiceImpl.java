@@ -3,15 +3,15 @@ package com.osmrecommend.persistence.service;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Way;
-import com.osmrecommend.persistence.domain.WayTag;
 import com.osmrecommend.persistence.repositories.WayRepository;
 import com.osmrecommend.persistence.repositories.WayTagRepository;
 
@@ -48,24 +48,6 @@ public class WayPersistenceServiceImpl implements WayService {
 	}
 
 	@Override
-	public Object2ObjectMap<String, String> getTagsForNode(Way node) {
-
-		ObjectList<Way> ways = new ObjectArrayList<Way>();
-		ways.add(node);
-		
-		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
-		
-		for(WayTag wayTag : tagRepo.findAll(ways)) {
-			
-			tags.put(wayTag.getK(), wayTag.getV());
-			
-		}
-		
-		return tags;
-		
-	}
-
-	@Override
 	public LongSet getAllUserIds() {
 
 		LongSet userIds = new LongArraySet();
@@ -78,6 +60,51 @@ public class WayPersistenceServiceImpl implements WayService {
 		
 		return userIds;
 		
+	}
+
+	@Override
+	public ObjectList<String> getTagsForWayId(Long wayId) {
+		
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByWayId(wayId)) {
+			
+			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			
+		}
+		
+		return tags;
+	}
+
+	@Override
+	public ObjectList<String> getAllTags() {
+
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
+			
+			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			
+		}
+		
+		return tags;
+		
+	}
+	
+	/**
+	 * @param mapOfTags
+	 */
+	private ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
+		
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for (Entry<String, String> e : mapOfTags.entrySet()) {
+
+			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
+
+		}
+		
+		return tags;
 	}
 
 }

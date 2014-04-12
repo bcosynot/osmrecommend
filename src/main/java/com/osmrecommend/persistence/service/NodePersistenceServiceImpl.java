@@ -3,17 +3,15 @@ package com.osmrecommend.persistence.service;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map.Entry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Node;
-import com.osmrecommend.persistence.domain.NodeTag;
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.NodeRepository;
 import com.osmrecommend.persistence.repositories.NodeTagRepository;
@@ -21,9 +19,6 @@ import com.osmrecommend.persistence.repositories.NodeTagRepository;
 @Component
 public class NodePersistenceServiceImpl implements NodeService {
 
-	
-	private static Logger log = LoggerFactory.getLogger(NodePersistenceServiceImpl.class);
-	
 	@Autowired
 	NodeRepository repo;
 	
@@ -45,29 +40,11 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 		LongSet nodeIds = new LongArraySet();
 		
-		for(Node n : repo.findAll()) {
-			nodeIds.add(n.getId());
+		for(Long nodeId : repo.findAllNodeIds()) {
+			nodeIds.add(nodeId);
 		}
 		
 		return nodeIds;
-	}
-
-	@Override
-	public Object2ObjectMap<String, String> getTagsForNode(Node node) {
-		
-		ObjectList<Node> nodes = new ObjectArrayList<Node>();
-		nodes.add(node);
-		
-		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
-		
-		for(NodeTag nodeTag : tagRepo.findAll(nodes)) {
-			
-			tags.put(nodeTag.getK(), nodeTag.getV());
-			
-		}
-		
-		return tags;
-		
 	}
 
 	@Override
@@ -91,24 +68,45 @@ public class NodePersistenceServiceImpl implements NodeService {
 	}
 
 	@Override
-	public Object2ObjectMap<String, String> getTagsForNodeId(Long nodeId) {
-		return getTagsForNode(repo.findOne(nodeId));
+	public ObjectList<String> getTagsForNodeId(Long nodeId) {
+		
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByNodeId(nodeId)) {
+			
+			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			
+		}
+		
+		return tags;
 	}
 
 	@Override
-	public Object2ObjectMap<String, String> getAllTags() {
+	public ObjectList<String> getAllTags() {
 		
-		if(null == tagRepo) {
-			log.info("tagRepo is null");
-		} else {
-			log.info("tagrepo isn't null");
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
+			
+			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			
 		}
-		Object2ObjectMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
 		
-		for(NodeTag nodeTag : tagRepo.findAll()) {
-			
-			tags.put(nodeTag.getK(), nodeTag.getV());
-			
+		return tags;
+		
+	}
+
+	/**
+	 * @param mapOfTags
+	 */
+	private ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
+		
+		ObjectList<String> tags = new ObjectArrayList<String>();
+		
+		for (Entry<String, String> e : mapOfTags.entrySet()) {
+
+			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
+
 		}
 		
 		return tags;
