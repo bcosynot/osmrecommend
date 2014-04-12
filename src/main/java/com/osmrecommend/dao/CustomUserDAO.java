@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import com.osmrecommend.persistence.service.UserService;
 
 @Configurable
-public class OSMRecommendUserDAO implements UserDAO {
+public class CustomUserDAO implements UserDAO {
 
 	@Autowired
 	UserService service;
