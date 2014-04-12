@@ -55,26 +55,8 @@ public class TFIDFItemScorer extends AbstractItemScorer {
             // Score the item represented by 'e'.
             // Get the item vector for this item
             SparseVector iv = model.getItemVector(e.getKey());
-            // TODO Compute the cosine of this item and the user's profile, store it in the output vector
-            double cos=0d;
-            /*double num=0d;
-            double denom1=0d;
-            double denom2=0d;
-            for(long t:iv.keySet()) {
-            	double numt = userVector.get(t)*iv.get(t);
-				num=num+numt;
-            	double denom1t = Math.pow(userVector.get(t), 2);
-				denom1=denom1+denom1t;
-            	double denom2t = Math.pow(iv.get(t), 2);
-				denom2=denom2+denom2t;
-            }
-            double denom = Math.sqrt(denom1)*Math.sqrt(denom2);
-			cos=num/denom;*/
-            //cos=(userVector.dot(iv))/(Math.pow(iv.norm(), 2)*Math.pow(userVector.norm(), 2));
-            cos=(userVector.dot(iv))/(iv.norm()*userVector.norm());
+            double cos = (userVector.dot(iv))/(iv.norm()*userVector.norm());
         	output.set(e, cos);
-            // TODO And remove this exception to say you've implemented it
-            //throw new UnsupportedOperationException("stub implementation");
         }
     }
 
@@ -91,12 +73,6 @@ public class TFIDFItemScorer extends AbstractItemScorer {
         // Fill it with 0's initially - they don't like anything
         profile.fill(0);
         
-        // For 2nd part, calculate the mean of the user's rating
-        /*double mean=0d;
-        for(NodeEdit e: userEvent) {
-        	mean=mean+e.getPreference().getValue();
-        }
-        mean=mean/userEvent.size();*/
         // Iterate over the user's ratings to build their profile
         for (NodeEdit e: userEvent) {
             // In LensKit, ratings are expressions of preference
@@ -105,7 +81,6 @@ public class TFIDFItemScorer extends AbstractItemScorer {
             // preferences to express the user unrating an item
             if (e != null) {
                 // The user likes this item!
-                // TODO Get the item's vector and add it to the user's profile
             	SparseVector iv = model.getItemVector(e.getItemId());
 				profile.add(iv);
             }
