@@ -31,7 +31,8 @@ dependencies {
 	compile 'org.hibernate:hibernate-spatial:4.0'
 	
 	compile 'org.slf4j:slf4j-api:1.7.6'
-	runtime 'org.slf4j:slf4j-jdk14:1.7.6'
+	runtime 'org.slf4j:slf4j-log4j12:1.7.6'
+    runtime 'log4j:log4j:1.2.14'
 	
 	compile 'commons-configuration:commons-configuration:1.10'
 	lenskiteval 'org.grouplens.lenskit:lenskit-eval:2.1-M2'
