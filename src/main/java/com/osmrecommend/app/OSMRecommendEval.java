@@ -9,6 +9,8 @@ import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.ItemDAO;
 import org.grouplens.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.data.event.Event;
+import org.grouplens.lenskit.eval.EvalConfig;
+import org.grouplens.lenskit.eval.EvalProject;
 import org.grouplens.lenskit.eval.TaskExecutionException;
 import org.grouplens.lenskit.eval.algorithm.AlgorithmInstanceBuilder;
 import org.grouplens.lenskit.eval.data.GenericDataSource;
@@ -47,6 +49,7 @@ public class OSMRecommendEval {
 		logger.info("configuring lenskit.");
 		
 		SimpleEvaluator simpleEval = new SimpleEvaluator();
+		logger.info("Building algorithm");
 		AlgorithmInstanceBuilder algo = new AlgorithmInstanceBuilder("tfdidf");
 		LenskitConfiguration lenskitConfig = algo.getConfig();
 		
@@ -62,6 +65,10 @@ public class OSMRecommendEval {
 
 		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(WayDAO.class));
 		
+		logger.info("Updating thread count.");
+		EvalProject ep = simpleEval.getRawCommand().getProject();
+		ep.setUserProperty(EvalConfig.THREAD_COUNT_PROPERTY, "4");
+		simpleEval.getRawCommand().setProject(ep);
 		simpleEval.addAlgorithm(algo);
 		simpleEval.addMetric(new CoveragePredictMetric());
 		simpleEval.addMetric(new RMSEPredictMetric());
@@ -94,7 +101,6 @@ public class OSMRecommendEval {
 				
 			}
 		} catch (TaskExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
