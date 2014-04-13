@@ -1,5 +1,6 @@
 package com.osmrecommend.app;
 
+import java.io.File;
 import java.util.Iterator;
 
 import org.grouplens.lenskit.ItemScorer;
@@ -11,6 +12,9 @@ import org.grouplens.lenskit.data.event.Event;
 import org.grouplens.lenskit.eval.TaskExecutionException;
 import org.grouplens.lenskit.eval.algorithm.AlgorithmInstanceBuilder;
 import org.grouplens.lenskit.eval.data.GenericDataSource;
+import org.grouplens.lenskit.eval.metrics.predict.CoveragePredictMetric;
+import org.grouplens.lenskit.eval.metrics.predict.NDCGPredictMetric;
+import org.grouplens.lenskit.eval.metrics.predict.RMSEPredictMetric;
 import org.grouplens.lenskit.eval.traintest.SimpleEvaluator;
 import org.grouplens.lenskit.util.table.Row;
 import org.grouplens.lenskit.util.table.Table;
@@ -59,8 +63,15 @@ public class OSMRecommendEval {
 		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(WayDAO.class));
 		
 		simpleEval.addAlgorithm(algo);
+		simpleEval.addMetric(new CoveragePredictMetric());
+		simpleEval.addMetric(new RMSEPredictMetric());
+		simpleEval.addMetric(new NDCGPredictMetric());
+		
 		GenericDataSource gds = new GenericDataSource("customgds", appContext.getBean(EditDAO.class));
 		simpleEval.addDataset(gds, 10);
+		
+		simpleEval.setOutput(new File("eval-results.csv"));
+		
 		try {
 			logger.info("Starting evaluations");
 			Table table = simpleEval.call();
