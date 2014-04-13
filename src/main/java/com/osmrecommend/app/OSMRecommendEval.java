@@ -2,7 +2,11 @@ package com.osmrecommend.app;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Properties;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.grouplens.lenskit.ItemScorer;
 import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.data.dao.EventDAO;
@@ -10,7 +14,6 @@ import org.grouplens.lenskit.data.dao.ItemDAO;
 import org.grouplens.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.data.event.Event;
 import org.grouplens.lenskit.eval.EvalConfig;
-import org.grouplens.lenskit.eval.EvalProject;
 import org.grouplens.lenskit.eval.TaskExecutionException;
 import org.grouplens.lenskit.eval.algorithm.AlgorithmInstanceBuilder;
 import org.grouplens.lenskit.eval.data.GenericDataSource;
@@ -47,8 +50,19 @@ public class OSMRecommendEval {
 		/*Lenkskit*/
 		
 		logger.info("configuring lenskit.");
-		
-		SimpleEvaluator simpleEval = new SimpleEvaluator();
+		CompositeConfiguration config = new CompositeConfiguration();
+		try {
+			config.addConfiguration(new PropertiesConfiguration("app.properties"));
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+		}
+
+		Properties properties = new Properties();
+		Integer threadCount = null;
+		if(null != (threadCount = config.getInteger("threadCount", 1))) {
+			properties.setProperty(EvalConfig.THREAD_COUNT_PROPERTY, threadCount.toString());
+		}
+		SimpleEvaluator simpleEval = new SimpleEvaluator(properties);
 		logger.info("Building algorithm");
 		AlgorithmInstanceBuilder algo = new AlgorithmInstanceBuilder("tfdidf");
 		LenskitConfiguration lenskitConfig = algo.getConfig();
@@ -65,10 +79,6 @@ public class OSMRecommendEval {
 
 		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(WayDAO.class));
 		
-		logger.info("Updating thread count.");
-		EvalProject ep = simpleEval.getRawCommand().getProject();
-		ep.setUserProperty(EvalConfig.THREAD_COUNT_PROPERTY, "4");
-		simpleEval.getRawCommand().setProject(ep);
 		simpleEval.addAlgorithm(algo);
 		simpleEval.addMetric(new CoveragePredictMetric());
 		simpleEval.addMetric(new RMSEPredictMetric());

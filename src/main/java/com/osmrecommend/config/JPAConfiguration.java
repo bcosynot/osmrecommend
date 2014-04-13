@@ -8,9 +8,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -42,13 +39,6 @@ public class JPAConfiguration {
 	
 	@Bean
 	public EntityManagerFactory entityManagerFactory() throws SQLException, PropertyVetoException {
-		
-		CompositeConfiguration config = new CompositeConfiguration();
-		try {
-			config.addConfiguration(new PropertiesConfiguration("app.properties"));
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		}
 		
 		DBConnectionConfig dbConnectionConfig = new DBConnectionConfig();
 		
