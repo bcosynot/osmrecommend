@@ -1,10 +1,13 @@
 package com.osmrecommend.dao;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
 
 import org.grouplens.lenskit.data.dao.ItemDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +16,8 @@ import com.osmrecommend.persistence.service.WayService;
 @Component
 public class WayDAO implements ItemDAO {
 
+	private static final Logger logger = LoggerFactory.getLogger(WayDAO.class);
+	
 	@Autowired
 	WayService service;
 	
@@ -26,7 +31,24 @@ public class WayDAO implements ItemDAO {
 	}
 	
 	public ObjectOpenHashBigSet<String> getTagVocabulary() {
-		return new ObjectOpenHashBigSet<String>(service.getAllTags());
+		
+		if(null==service) {
+			logger.info("service is null");
+		} else {
+			logger.info("service isn't null");
+		}
+		
+		ObjectList<String> allTags = new ObjectArrayList<String>();
+		ObjectList<String> tempAllTags;
+		if(null == (tempAllTags = service.getAllTags())) {
+			logger.info("tempAllTags is null");
+		} else {
+			logger.info("tempAllTags isn't null");
+			allTags.addAll(tempAllTags);
+		}
+		
+		return new ObjectOpenHashBigSet<String>(allTags);
+		
 	}
 
 }
