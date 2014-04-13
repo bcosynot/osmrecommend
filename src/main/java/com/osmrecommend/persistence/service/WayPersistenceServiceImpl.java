@@ -30,7 +30,10 @@ public class WayPersistenceServiceImpl implements WayService {
 	@Override
 	public Iterable<Way> getAllWays() {
 		logger.info("Inside getAllWays");
-		return repo.findAll();
+		Long ts = System.currentTimeMillis();
+		Iterable<Way> allWays = repo.findAll();
+		logger.info("All ways fetched in "+(System.currentTimeMillis() - ts)/1000+"s");
+		return allWays;
 	}
 
 	@Override
