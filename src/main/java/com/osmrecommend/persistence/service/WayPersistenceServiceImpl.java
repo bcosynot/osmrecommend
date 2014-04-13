@@ -39,8 +39,8 @@ public class WayPersistenceServiceImpl implements WayService {
 
 		LongSet wayIds = new LongArraySet();
 		
-		for(Way way : repo.findAll()) {
-			wayIds.add(way.getId());
+		for(Long wayId : repo.findAllWayIds()) {
+			wayIds.add(wayId);
 		}
 		
 		return wayIds;
