@@ -1,5 +1,7 @@
 package com.osmrecommend.persistence.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +13,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 @Cacheable
-public class User {
+public class User implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 706383855230914335L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -55,9 +55,8 @@ public class Node implements Serializable {
 	@Column(name = "version")
 	private Integer version;
 	
-	//@Column(name = "user_id")
 	@OneToOne
-	@PrimaryKeyJoinColumn
+	@PrimaryKeyJoinColumn(name = "user_id")
 	private User user;
 	
 	@Column(name = "tsamp")

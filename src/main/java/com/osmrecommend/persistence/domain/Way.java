@@ -44,8 +44,7 @@ public class Way implements Serializable {
 	private Integer version;
 	
 	@OneToOne
-	@PrimaryKeyJoinColumn
-	//@Column(name = "user_id")
+	@PrimaryKeyJoinColumn(name = "user_id")
 	private User user;
 	
 	@Column(name = "tstamp")
