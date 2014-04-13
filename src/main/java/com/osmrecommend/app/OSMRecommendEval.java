@@ -24,7 +24,7 @@ import com.osmrecommend.config.JPAConfiguration;
 import com.osmrecommend.dao.CustomUserDAO;
 import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
-import com.osmrecommend.data.event.edit.NodeEdit;
+import com.osmrecommend.data.event.edit.WayEdit;
 
 @Component
 public class OSMRecommendEval {
@@ -52,7 +52,7 @@ public class OSMRecommendEval {
 		lenskitConfig.bind(EventDAO.class)
 				.to(appContext.getBean(EditDAO.class));
 
-		lenskitConfig.bind(Event.class).to(NodeEdit.class);
+		lenskitConfig.bind(Event.class).to(WayEdit.class);
 
 		lenskitConfig.bind(UserDAO.class).to(CustomUserDAO.class);
 
