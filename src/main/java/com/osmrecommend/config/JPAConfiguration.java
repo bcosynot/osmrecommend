@@ -51,14 +51,14 @@ public class JPAConfiguration {
 		
 		DBConnectionConfig dbConnectionConfig = new DBConnectionConfig();
 		
-		Map<String, String> dbConnectionProperties = new HashMap<String, String>();
+		Map<String, Object> dbConnectionProperties = new HashMap<String, Object>();
 		dbConnectionProperties.put("hibernate.default_schema", dbConnectionConfig.getSchema());
 		dbConnectionProperties.put("hibernate.dialect", "org.hibernate.spatial.dialect.postgis.PostgisDialect");
-		dbConnectionProperties.put("hibernate.c3p0.min_size", "5");
-		dbConnectionProperties.put("hibernate.c3p0.max_size", "20");
-		dbConnectionProperties.put("hibernate.c3p0.timeout", "300");
-		dbConnectionProperties.put("hibernate.c3p0.max_statements", "50");
-		dbConnectionProperties.put("hibernate.c3p0.idle_test_period", "3000");
+		dbConnectionProperties.put("hibernate.c3p0.min_size", 5);
+		dbConnectionProperties.put("hibernate.c3p0.max_size", 20);
+		dbConnectionProperties.put("hibernate.c3p0.timeout", 300);
+		dbConnectionProperties.put("hibernate.c3p0.max_statements", 50);
+		dbConnectionProperties.put("hibernate.c3p0.idle_test_period", 3000);
 		
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 	    vendorAdapter.setGenerateDdl(true);
