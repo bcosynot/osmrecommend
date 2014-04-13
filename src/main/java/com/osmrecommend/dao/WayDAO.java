@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.persistence.service.WayService;
 
 @Component
@@ -28,8 +29,17 @@ public class WayDAO implements ItemDAO {
 	}
 	
 	public ObjectList<String> getItemTags(long item) {
-		logger.info("Fetching way tags for id: "+item);
 		return service.getTagsForWayId(item);
+	}
+	
+	public ObjectList<Way> getAllWays() {
+		logger.info("Fetching all Ways");
+		Iterable<Way> allWays = service.getAllWays();
+		ObjectList<Way> allWaysList = new ObjectArrayList<Way>();
+		for(Way way : allWays) {
+			allWaysList.add(way);
+		}
+		return allWaysList;
 	}
 	
 	public ObjectOpenHashBigSet<String> getTagVocabulary() {

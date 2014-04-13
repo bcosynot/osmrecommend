@@ -2,14 +2,13 @@ package com.osmrecommend.cbf;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -25,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.osmrecommend.dao.WayDAO;
+import com.osmrecommend.persistence.domain.Way;
+import com.osmrecommend.util.ConverterUtil;
 
 /**
  * Builder for computing {@linkplain TFIDFModel TF-IDF models} from item tag data.  Each item is
@@ -86,23 +87,23 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 
         // Iterate over the items to compute each item's vector.
         logger.info("Iterate over the items to compute each item's vector.");
-        LongSet items = dao.getItemIds();
-        for (long item: items) {
+        ObjectList<Way> allWays = dao.getAllWays();
+        for (Way item: allWays) {
             // Reset the work vector for this item's tags.
             work.clear();
             // Now the vector is empty (all keys are 'unset').
 
             // Populate the work vector with the number of times each tag is applied to this item.
             // First, get the list of tags for an item.
-            List<String> itemTags=dao.getItemTags(item);
+            ObjectList<String> itemTags = ConverterUtil.convertMapOfTagsToCombinedList(item.getTags());
             // Iterate over this list.
             for(String tag: itemTags) {
             	// Fetch the numeric Id for this tag.
-            	long tagId=tagIds.get(tag);
+            	long tagId = tagIds.get(tag);
             	// Get the current count for this tag.
             	double currentCount=0;
             	if(work.containsKey(tagId)) {
-            		currentCount=work.get(tagId);
+            		currentCount = work.get(tagId);
             	}
             	//Increment the count.
             	currentCount++;
@@ -111,7 +112,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             }
             // Increment the document frequency vector once for each unique tag on the item.
             // Get the set of tags for this item.
-            ObjectSet<String> uniqueItemTags=new ObjectOpenHashSet<String>(itemTags);
+            ObjectSet<String> uniqueItemTags = new ObjectOpenHashSet<String>(itemTags);
             // Iterate over this set.
             for(String tag: uniqueItemTags) {
             	// Get the numeric Id for this tag.
@@ -128,7 +129,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             }
             // Save a shrunk copy of the vector (only storing tags that apply to this item) in
             // our map, we'll add IDF and normalize later.
-            itemVectors.put(item, work.shrinkDomain());
+            itemVectors.put(item.getWayId(), work.shrinkDomain());
             // work is ready to be reset and re-used for the next item
         }
         logger.info("Finished: Iterate over the items to compute each item's vector.");
@@ -140,8 +141,8 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         for (VectorEntry e: docFreq.fast()) {
             // Update this document frequency entry to be a log-IDF value
         	double freq=e.getValue();
-        	freq=freq/items.size();
-        	freq=Math.log(freq);
+        	freq = freq/allWays.size();
+        	freq = Math.log(freq);
         	docFreq.set(e, freq);
         }
         logger.info("Finished: Invert and log the document frequency.  We can do this in-place.");
