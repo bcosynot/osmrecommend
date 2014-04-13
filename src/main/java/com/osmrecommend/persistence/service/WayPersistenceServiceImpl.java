@@ -35,7 +35,7 @@ public class WayPersistenceServiceImpl implements WayService {
 	}
 
 	@Override
-	public Iterable<Long> getAllWayIDs() {
+	public LongSet getAllWayIDs() {
 
 		LongSet wayIds = new LongArraySet();
 		

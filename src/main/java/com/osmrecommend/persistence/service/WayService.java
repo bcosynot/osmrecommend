@@ -14,7 +14,7 @@ public interface WayService {
 	
 	public Way getWayById(Long id);
 	
-	public Iterable<Long> getAllWayIDs();
+	public LongSet getAllWayIDs();
 	
 	public ObjectList<String> getTagsForWayId(Long wayId);
 	

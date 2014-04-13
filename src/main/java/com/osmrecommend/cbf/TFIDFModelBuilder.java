@@ -20,7 +20,7 @@ import org.grouplens.lenskit.vectors.VectorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
-import com.osmrecommend.dao.NodeDAO;
+import com.osmrecommend.dao.WayDAO;
 
 /**
  * Builder for computing {@linkplain TFIDFModel TF-IDF models} from item tag data.  Each item is
@@ -31,7 +31,7 @@ import com.osmrecommend.dao.NodeDAO;
 public class TFIDFModelBuilder implements Provider<TFIDFModel> {
     
 	@Autowired
-	private NodeDAO dao;
+	private WayDAO dao;
 
     /**
      * Construct a model builder.  The {@link Inject} annotation on this constructor tells LensKit
@@ -45,7 +45,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      *            properly.  It's up to you to keep this promise.</p>
      */
     @Inject
-    public TFIDFModelBuilder(@Transient NodeDAO dao) {
+    public TFIDFModelBuilder(@Transient WayDAO dao) {
         this.dao = dao;
     }
 

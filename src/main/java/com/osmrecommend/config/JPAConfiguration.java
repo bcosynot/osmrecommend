@@ -23,6 +23,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.osmrecommend.dao.AreaDAO;
 import com.osmrecommend.dao.NodeDAO;
+import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
 
 
@@ -101,6 +102,11 @@ public class JPAConfiguration {
 	@Bean
 	public NodeDAO nodeDAO() {
 		return new NodeDAO();
+	}
+	
+	@Bean
+	public WayDAO wayDAO() {
+		return new WayDAO();
 	}
 	
 	@Bean

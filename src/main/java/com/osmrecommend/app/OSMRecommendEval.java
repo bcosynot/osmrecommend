@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import com.osmrecommend.cbf.TFIDFItemScorer;
 import com.osmrecommend.config.JPAConfiguration;
 import com.osmrecommend.dao.CustomUserDAO;
-import com.osmrecommend.dao.NodeDAO;
+import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
 import com.osmrecommend.data.event.edit.NodeEdit;
 
@@ -56,7 +56,7 @@ public class OSMRecommendEval {
 
 		lenskitConfig.bind(UserDAO.class).to(CustomUserDAO.class);
 
-		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(NodeDAO.class));
+		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(WayDAO.class));
 		
 		simpleEval.addAlgorithm(algo);
 		GenericDataSource gds = new GenericDataSource("customgds", appContext.getBean(EditDAO.class));
