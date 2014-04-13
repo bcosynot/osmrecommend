@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.NodeRepository;
-import com.osmrecommend.persistence.repositories.NodeTagRepository;
 import com.osmrecommend.util.ConverterUtil;
 
 @Component
@@ -20,9 +19,6 @@ public class NodePersistenceServiceImpl implements NodeService {
 
 	@Autowired
 	NodeRepository repo;
-	
-	@Autowired
-	NodeTagRepository tagRepo;
 	
 	@Override
 	public Iterable<Node> getAllNodes() {

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.persistence.repositories.WayRepository;
-import com.osmrecommend.persistence.repositories.WayTagRepository;
 import com.osmrecommend.util.ConverterUtil;
 
 @Component
@@ -23,9 +22,6 @@ public class WayPersistenceServiceImpl implements WayService {
 	
 	@Autowired
 	WayRepository repo;
-	
-	@Autowired
-	WayTagRepository tagRepo;
 	
 	@Override
 	public Iterable<Way> getAllWays() {
