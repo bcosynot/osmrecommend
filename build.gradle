@@ -50,4 +50,4 @@ task lenskitEval(type: JavaExec) {
 	main 'org.grouplens.lenskit.eval.cli.EvalCLI'
 }
 
-mainClassName = "com.osmrecommend.app.OSMRecommend"
+mainClassName = "com.osmrecommend.app.OSMRecommendEval"
