@@ -1,15 +1,10 @@
 package com.osmrecommend.data.event.edit;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.osmrecommend.data.event.Edit;
 import com.osmrecommend.persistence.domain.Node;
 
-@Component
 public class NodeEdit extends Edit {
 	
-	@Autowired
 	Node node;
 
 	@Override
