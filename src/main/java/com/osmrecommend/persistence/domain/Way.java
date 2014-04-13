@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ import com.vividsolutions.jts.geom.Geometry;
 @Entity
 @Table(name = "ways")
 @TypeDef(name = "hstore", typeClass = HstoreUserType.class)
+@Cacheable
 public class Way implements Serializable {
 
 	/**
