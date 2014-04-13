@@ -37,8 +37,11 @@ public class HstoreHelper {
             String[] kv = token.split(K_V_SEPARATOR);
             String k = kv[0];
             k = k.trim().substring(1, k.length() - 1);
-            String v = kv[1];
-            v = v.trim().substring(1, v.length() - 1);
+            String v = "";
+			if (kv.length > 1) {
+				v = kv[1];
+				v = v.trim().substring(1, v.length() - 1);
+			}
             m.put(k, v);
         }
         return m;
