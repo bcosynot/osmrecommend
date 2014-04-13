@@ -2,9 +2,7 @@ package com.osmrecommend.dao;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-
-import java.util.HashSet;
-import java.util.Set;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
 
 import org.grouplens.lenskit.data.dao.ItemDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,8 @@ public class NodeDAO implements ItemDAO {
 		return service.getTagsForNodeId(item);
 	}
 	
-	public Set<String> getTagVocabulary() {
-		return new HashSet<String>(service.getAllTags());
+	public ObjectOpenHashBigSet<String> getTagVocabulary() {
+		return new ObjectOpenHashBigSet<String>(service.getAllTags());
 	}
 
 }

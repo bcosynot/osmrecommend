@@ -1,7 +1,9 @@
 package com.osmrecommend.cbf;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +20,7 @@ import org.grouplens.lenskit.vectors.VectorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
-import com.osmrecommend.dao.AreaDAO;
+import com.osmrecommend.dao.NodeDAO;
 
 /**
  * Builder for computing {@linkplain TFIDFModel TF-IDF models} from item tag data.  Each item is
@@ -29,7 +31,7 @@ import com.osmrecommend.dao.AreaDAO;
 public class TFIDFModelBuilder implements Provider<TFIDFModel> {
     
 	@Autowired
-	private AreaDAO dao;
+	private NodeDAO dao;
 
     /**
      * Construct a model builder.  The {@link Inject} annotation on this constructor tells LensKit
@@ -43,7 +45,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      *            properly.  It's up to you to keep this promise.</p>
      */
     @Inject
-    public TFIDFModelBuilder(@Transient AreaDAO dao) {
+    public TFIDFModelBuilder(@Transient NodeDAO dao) {
         this.dao = dao;
     }
 
@@ -163,9 +165,9 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      */
     private Map<String,Long> buildTagIdMap() {
         // Get the universe of all tags
-        ObjectSet<String> tags = dao.getTagVocabulary();
+    	ObjectOpenHashBigSet<String> tags = dao.getTagVocabulary();
         // Allocate our new tag map
-        Map<String,Long> tagIds = Maps.newHashMap();
+        Object2LongMap<String> tagIds = new Object2LongOpenHashMap<String>();
 
         for (String tag: tags) {
             // Map each tag to a new number.

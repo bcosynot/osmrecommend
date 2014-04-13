@@ -10,6 +10,7 @@ import org.grouplens.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.data.event.Event;
 import org.grouplens.lenskit.eval.TaskExecutionException;
 import org.grouplens.lenskit.eval.algorithm.AlgorithmInstanceBuilder;
+import org.grouplens.lenskit.eval.data.GenericDataSource;
 import org.grouplens.lenskit.eval.traintest.SimpleEvaluator;
 import org.grouplens.lenskit.util.table.Row;
 import org.grouplens.lenskit.util.table.Table;
@@ -20,8 +21,8 @@ import org.springframework.stereotype.Component;
 
 import com.osmrecommend.cbf.TFIDFItemScorer;
 import com.osmrecommend.config.JPAConfiguration;
-import com.osmrecommend.dao.AreaDAO;
 import com.osmrecommend.dao.CustomUserDAO;
+import com.osmrecommend.dao.NodeDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
 import com.osmrecommend.data.event.edit.NodeEdit;
 
@@ -41,7 +42,7 @@ public class OSMRecommendEval {
 		
 		logger.info("configuring lenskit.");
 		
-		SimpleEvaluator simpleEvaluator = new SimpleEvaluator();
+		SimpleEvaluator simpleEval = new SimpleEvaluator();
 		AlgorithmInstanceBuilder algo = new AlgorithmInstanceBuilder("tfdidf");
 		LenskitConfiguration lenskitConfig = algo.getConfig();
 		
@@ -55,13 +56,14 @@ public class OSMRecommendEval {
 
 		lenskitConfig.bind(UserDAO.class).to(CustomUserDAO.class);
 
-		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(AreaDAO.class));
+		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(NodeDAO.class));
 		
-		simpleEvaluator.addAlgorithm(algo);
-		
+		simpleEval.addAlgorithm(algo);
+		GenericDataSource gds = new GenericDataSource("customgds", appContext.getBean(EditDAO.class));
+		simpleEval.addDataset(gds, 10);
 		try {
 			logger.info("Starting evaluations");
-			Table table = simpleEvaluator.call();
+			Table table = simpleEval.call();
 			logger.info("evaluation over");
 			Iterator<Row> rowIterator = table.iterator();
 			logger.info("printing details");
