@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -21,6 +23,14 @@ import org.hibernate.annotations.TypeDef;
 import com.osmrecommend.util.HstoreUserType;
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * Represents a way. A way is an ordered list of nodes which normally also has at least one tag.
+ * 
+ * See the wiki <a href="http://wiki.openstreetmap.org/wiki/Way">
+ * article</a> for more details.
+ * 
+ * @author Vivek
+ */
 @Entity
 @Table(name = "ways")
 @TypeDef(name = "hstore", typeClass = HstoreUserType.class)
@@ -32,27 +42,51 @@ public class Way implements Serializable {
 	 */
 	private static final long serialVersionUID = 705971055750956266L;
 
+	/**
+	 * Primary key for the row in table.
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
 	
+	/**
+	 * The ID to represent it across the system.
+	 * Used for preserving historical information. 
+	 */
 	@Column(name = "way_id")
 	private Long wayId;
 	
+	/**
+	 * The version of the way this Object represents. 
+	 */
 	@Column(name = "version")
 	private Integer version;
 	
+	
+	/**
+	 * The {@link User} that edited this version. 
+	 */
 	@OneToOne
 	@PrimaryKeyJoinColumn(name = "user_id")
 	private User user;
 	
+	/**
+	 * Timestamp when this version of the Way was edited.
+	 */
 	@Column(name = "tstamp")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	
+	/**
+	 * The changeset that this version of the way belongs to. 
+	 */
 	@Column(name = "changeset_id")
 	private Long changesetId;
 	
+	/**
+	 * All the tags this Way contains. 
+	 */
 	@Type(type = "hstore")
 	@Column(name = "tags", columnDefinition = "hstore")
 	private Object2ObjectOpenHashMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>(); 
