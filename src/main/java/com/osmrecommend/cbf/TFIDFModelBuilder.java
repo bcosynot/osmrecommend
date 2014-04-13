@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 
@@ -22,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.collect.Maps;
 import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.util.ConverterUtil;
@@ -40,6 +38,8 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 	@Autowired
 	private WayDAO dao;
 
+	private ObjectList<Way> allWays;
+
     /**
      * Construct a model builder.  The {@link Inject} annotation on this constructor tells LensKit
      * that it can be used to build the model builder.
@@ -55,6 +55,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
     public TFIDFModelBuilder(@Transient WayDAO dao) {
     	logger.info("creating TFIDFModelBuilder using custom constructor with "+dao.toString());
         this.dao = dao;
+		allWays = dao.getAllWays();
     }
 
     /**
@@ -78,7 +79,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 
         // Create a map to store the item TF vectors.
         logger.info("Create a map to store the item TF vectors.");
-        Map<Long,MutableSparseVector> itemVectors = Maps.newHashMap();
+        Long2ObjectMap<MutableSparseVector> itemVectors = new Long2ObjectOpenHashMap<MutableSparseVector>();
 
         // Create a work vector to accumulate each item's tag vector.
         // This vector will be re-used for each item.
@@ -87,12 +88,10 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 
         // Iterate over the items to compute each item's vector.
         logger.info("Iterate over the items to compute each item's vector.");
-        ObjectList<Way> allWays = dao.getAllWays();
         for (Way item: allWays) {
             // Reset the work vector for this item's tags.
             work.clear();
             // Now the vector is empty (all keys are 'unset').
-
             // Populate the work vector with the number of times each tag is applied to this item.
             // First, get the list of tags for an item.
             ObjectList<String> itemTags = ConverterUtil.convertMapOfTagsToCombinedList(item.getTags());
@@ -184,8 +183,8 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
     	logger.info("building tags map");
         // Get the universe of all tags
     	logger.info("fetching tag vocabulary");
-    	ObjectOpenHashBigSet<String> tags = dao.getTagVocabulary();
-    	logger.info("tag vocan fetched. total size:"+tags.size64());
+    	ObjectOpenHashSet<String> tags = getTagVocabulary();
+    	logger.info("tag vocan fetched. total size:"+tags.size());
         // Allocate our new tag map
         Object2LongMap<String> tagIds = new Object2LongOpenHashMap<String>();
 
@@ -197,4 +196,17 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         logger.info("finished assigning ids to tags. size: "+tagIds.size());
         return tagIds;
     }
+
+	private ObjectOpenHashSet<String> getTagVocabulary() {
+		logger.info("creating tag vocabulary");
+		ObjectOpenHashSet<String> allTags = new ObjectOpenHashSet<String>();
+		
+		for(Way way : allWays) {
+			
+			allTags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(way.getTags()));
+			
+		}
+		
+		return allTags;
+	}
 }

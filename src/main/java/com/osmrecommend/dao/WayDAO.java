@@ -3,7 +3,7 @@ package com.osmrecommend.dao;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import org.grouplens.lenskit.data.dao.ItemDAO;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class WayDAO implements ItemDAO {
 		return allWaysList;
 	}
 	
-	public ObjectOpenHashBigSet<String> getTagVocabulary() {
+	public ObjectOpenHashSet<String> getTagVocabulary() {
 		
 		logger.info("fetching tag vocabulary");
 		if(null==service) {
@@ -60,7 +60,7 @@ public class WayDAO implements ItemDAO {
 			allTags.addAll(tempAllTags);
 		}
 		
-		return new ObjectOpenHashBigSet<String>(allTags);
+		return new ObjectOpenHashSet<String>(allTags);
 		
 	}
 
