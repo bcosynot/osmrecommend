@@ -6,8 +6,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.util.Map.Entry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.persistence.repositories.WayRepository;
 import com.osmrecommend.persistence.repositories.WayTagRepository;
+import com.osmrecommend.util.ConverterUtil;
 
 @Component
 public class WayPersistenceServiceImpl implements WayService {
@@ -72,14 +71,11 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public ObjectList<String> getTagsForWayId(Long wayId) {
-		logger.info("Inside getTagsForWayId");
-		
-		logger.info("fetching tags for way id:"+wayId);
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByWayId(wayId)) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -95,7 +91,7 @@ public class WayPersistenceServiceImpl implements WayService {
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -103,20 +99,4 @@ public class WayPersistenceServiceImpl implements WayService {
 		
 	}
 	
-	/**
-	 * @param mapOfTags
-	 */
-	private ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
-		
-		ObjectList<String> tags = new ObjectArrayList<String>();
-		
-		for (Entry<String, String> e : mapOfTags.entrySet()) {
-
-			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
-
-		}
-		
-		return tags;
-	}
-
 }

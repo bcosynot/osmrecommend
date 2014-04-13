@@ -15,6 +15,7 @@ import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.NodeRepository;
 import com.osmrecommend.persistence.repositories.NodeTagRepository;
+import com.osmrecommend.util.ConverterUtil;
 
 @Component
 public class NodePersistenceServiceImpl implements NodeService {
@@ -74,7 +75,7 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByNodeId(nodeId)) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -88,7 +89,7 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -96,22 +97,5 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 	}
 
-	/**
-	 * @param mapOfTags
-	 */
-	private ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
-		
-		ObjectList<String> tags = new ObjectArrayList<String>();
-		
-		for (Entry<String, String> e : mapOfTags.entrySet()) {
-
-			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
-
-		}
-		
-		return tags;
-	}
-
-	
 
 }
