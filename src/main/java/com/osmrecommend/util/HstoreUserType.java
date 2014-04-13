@@ -24,7 +24,7 @@ public class HstoreUserType implements UserType {
     public Object deepCopy(Object o) throws HibernateException {
         // It's not a true deep copy, but we store only String instances, and they
         // are immutable, so it should be OK
-        Map m = (Map) o;
+    	Object2ObjectOpenHashMap m = (Object2ObjectOpenHashMap) o;
         return new Object2ObjectOpenHashMap(m);
     }
 
@@ -33,8 +33,8 @@ public class HstoreUserType implements UserType {
     }
 
     public boolean equals(Object o1, Object o2) throws HibernateException {
-        Map m1 = (Map) o1;
-        Map m2 = (Map) o2;
+    	Object2ObjectOpenHashMap m1 = (Object2ObjectOpenHashMap) o1;
+    	Object2ObjectOpenHashMap m2 = (Object2ObjectOpenHashMap) o2;
         return m1.equals(m2);
     }
 
@@ -51,7 +51,7 @@ public class HstoreUserType implements UserType {
 
     @Override
     public void nullSafeSet(PreparedStatement preparedStatement, Object o, int i, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
-        String s = HstoreHelper.toString((Map) o);
+        String s = HstoreHelper.toString((Object2ObjectOpenHashMap) o);
         preparedStatement.setObject(i, s, Types.OTHER);
     }
 

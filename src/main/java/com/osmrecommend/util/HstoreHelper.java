@@ -1,17 +1,18 @@
 package com.osmrecommend.util;
 
 
-import org.springframework.util.StringUtils;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.util.StringUtils;
 
 // courtesy of: http://backtothefront.net/2011/storing-sets-keyvalue-pairs-single-db-column-hibernate-postgresql-hstore-type/
 public class HstoreHelper {
 
     private static final String K_V_SEPARATOR = "=>";
 
-    public static String toString(Map<String, String> m) {
+    public static String toString(Object2ObjectOpenHashMap<String, String> m) {
         if (m.isEmpty()) {
             return "";
         }
@@ -27,8 +28,8 @@ public class HstoreHelper {
         return sb.toString();
     }
 
-    public static Map<String, String> toMap(String s) {
-        Map<String, String> m = new HashMap<String, String>();
+    public static Object2ObjectOpenHashMap<String, String> toMap(String s) {
+    	Object2ObjectOpenHashMap<String, String> m = new Object2ObjectOpenHashMap<String, String>();
         if (! StringUtils.hasText(s)) {
             return m;
         }

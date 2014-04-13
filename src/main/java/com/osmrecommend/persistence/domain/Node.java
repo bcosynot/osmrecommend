@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,19 +71,19 @@ public class Node implements Serializable {
 	
 	@Type(type = "hstore")
 	@Column(name = "tags", columnDefinition = "hstore")
-	private Map<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
+	private Object2ObjectOpenHashMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
 
 	/**
 	 * @return the tags
 	 */
-	public Map<String, String> getTags() {
+	public Object2ObjectOpenHashMap<String, String> getTags() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(Map<String, String> tags) {
+	public void setTags(Object2ObjectOpenHashMap<String, String> tags) {
 		this.tags = tags;
 	}
 
