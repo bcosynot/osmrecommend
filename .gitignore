@@ -8,3 +8,5 @@ app.properties
 log4j.properties
 runLog.log
 customgds-crossfold
+eval-results.csv
+runLog.log.1
