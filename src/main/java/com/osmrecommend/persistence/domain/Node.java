@@ -2,6 +2,7 @@ package com.osmrecommend.persistence.domain;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,7 +23,12 @@ import com.vividsolutions.jts.geom.Geometry;
 @Entity
 @Table(name = "nodes")
 @TypeDef(name = "hstore", typeClass = HstoreUserType.class)
-public class Node {
+public class Node implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2973199082591265051L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

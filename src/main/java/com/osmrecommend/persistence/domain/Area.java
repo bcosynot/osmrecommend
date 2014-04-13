@@ -1,5 +1,7 @@
 package com.osmrecommend.persistence.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,12 @@ import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
 @Table(name = "areas")
-public class Area {
+public class Area implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6546127803619615227L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

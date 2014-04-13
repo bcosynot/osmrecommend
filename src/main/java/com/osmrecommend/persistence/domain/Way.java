@@ -2,6 +2,7 @@ package com.osmrecommend.persistence.domain;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Cacheable;
@@ -34,7 +35,12 @@ import com.vividsolutions.jts.geom.Geometry;
 @Table(name = "ways")
 @TypeDef(name = "hstore", typeClass = HstoreUserType.class)
 @Cacheable
-public class Way {
+public class Way implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7941769011539363185L;
 
 	/**
 	 * Primary key for the row in table.
