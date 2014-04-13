@@ -1,14 +1,16 @@
 package com.osmrecommend.cbf;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -17,6 +19,8 @@ import org.grouplens.lenskit.core.Transient;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
 import org.grouplens.lenskit.vectors.SparseVector;
 import org.grouplens.lenskit.vectors.VectorEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
@@ -30,6 +34,8 @@ import com.osmrecommend.dao.WayDAO;
  */
 public class TFIDFModelBuilder implements Provider<TFIDFModel> {
     
+	private static final Logger logger = LoggerFactory.getLogger(TFIDFModelBuilder.class);
+	
 	@Autowired
 	private WayDAO dao;
 
@@ -46,6 +52,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      */
     @Inject
     public TFIDFModelBuilder(@Transient WayDAO dao) {
+    	logger.info("creating TFIDFModelBuilder using custom constructor with "+dao.toString());
         this.dao = dao;
     }
 
@@ -55,9 +62,10 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      */
     @Override
     public TFIDFModel get() {
+    	logger.info("computing model");
         // Build a map of tags to numeric IDs.  This lets you convert tags (which are strings)
         // into long IDs that you can use as keys in a tag vector.
-        Map<String, Long> tagIds = buildTagIdMap();
+    	Object2LongMap<String> tagIds = buildTagIdMap();
 
         // Create a vector to accumulate document frequencies for the IDF computation
         MutableSparseVector docFreq = MutableSparseVector.create(tagIds.values());
@@ -68,13 +76,16 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         // We will then apply the IDF to each TF vector and normalize it to a unit vector.
 
         // Create a map to store the item TF vectors.
+        logger.info("Create a map to store the item TF vectors.");
         Map<Long,MutableSparseVector> itemVectors = Maps.newHashMap();
 
         // Create a work vector to accumulate each item's tag vector.
         // This vector will be re-used for each item.
+        logger.info("Create a work vector to accumulate each item's tag vector. This vector will be re-used for each item.");
         MutableSparseVector work = MutableSparseVector.create(tagIds.values());
 
         // Iterate over the items to compute each item's vector.
+        logger.info("Iterate over the items to compute each item's vector.");
         LongSet items = dao.getItemIds();
         for (long item: items) {
             // Reset the work vector for this item's tags.
@@ -100,7 +111,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             }
             // Increment the document frequency vector once for each unique tag on the item.
             // Get the set of tags for this item.
-            Set<String> uniqueItemTags=new HashSet<String>(itemTags);
+            ObjectSet<String> uniqueItemTags=new ObjectOpenHashSet<String>(itemTags);
             // Iterate over this set.
             for(String tag: uniqueItemTags) {
             	// Get the numeric Id for this tag.
@@ -120,10 +131,12 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             itemVectors.put(item, work.shrinkDomain());
             // work is ready to be reset and re-used for the next item
         }
+        logger.info("Finished: Iterate over the items to compute each item's vector.");
 
         // Now we've seen all the items, so we have each item's TF vector and a global vector
         // of document frequencies.
         // Invert and log the document frequency.  We can do this in-place.
+        logger.info("Invert and log the document frequency.  We can do this in-place.");
         for (VectorEntry e: docFreq.fast()) {
             // Update this document frequency entry to be a log-IDF value
         	double freq=e.getValue();
@@ -131,20 +144,22 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         	freq=Math.log(freq);
         	docFreq.set(e, freq);
         }
+        logger.info("Finished: Invert and log the document frequency.  We can do this in-place.");
 
         // Now docFreq is a log-IDF vector.
         // So we can use it to apply IDF to each item vector to put it in the final model.
         // Create a map to store the final model data.
-        Map<Long,SparseVector> modelData = Maps.newHashMap();
+        logger.info("Create a map to store the final model data.");
+        Long2ObjectMap<SparseVector> modelData = new Long2ObjectOpenHashMap<SparseVector>();
         for (Map.Entry<Long,MutableSparseVector> entry: itemVectors.entrySet()) {
             MutableSparseVector tv = entry.getValue();
-            // TODO Convert this vector to a TF-IDF vector
+            // Convert this vector to a TF-IDF vector
             for(long tagId: tv.keySet()) {
             	double tf=tv.get(tagId);
             	double tfidf=tf*docFreq.get(tagId);
             	tv.set(tagId, tfidf);
             }
-            // TODO Normalize the TF-IDF vector to be a unit vector
+            // Normalize the TF-IDF vector to be a unit vector
             // HINT The method tv.norm() will give you the Euclidian length of the vector
             double length=tv.norm();
             for (long tagId: tv.keySet()) {
@@ -153,6 +168,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             // Store a frozen (immutable) version of the vector in the model data.
             modelData.put(entry.getKey(), tv.freeze());
         }
+        logger.info("Finished: Create a map to store the final model data.");
 
         // we technically don't need the IDF vector anymore, so long as we have no new tags
         return new TFIDFModel(tagIds, modelData);
@@ -163,16 +179,21 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      *
      * @return A mapping from tags to IDs.
      */
-    private Map<String,Long> buildTagIdMap() {
+    private Object2LongMap<String> buildTagIdMap() {
+    	logger.info("building tags map");
         // Get the universe of all tags
+    	logger.info("fetching tag vocabulary");
     	ObjectOpenHashBigSet<String> tags = dao.getTagVocabulary();
+    	logger.info("tag vocan fetched. total size:"+tags.size64());
         // Allocate our new tag map
         Object2LongMap<String> tagIds = new Object2LongOpenHashMap<String>();
 
+        logger.info("assigning ids to tags");
         for (String tag: tags) {
             // Map each tag to a new number.
             tagIds.put(tag, tagIds.size() + 1L);
         }
+        logger.info("finished assigning ids to tags. size: "+tagIds.size());
         return tagIds;
     }
 }

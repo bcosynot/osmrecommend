@@ -1,10 +1,15 @@
 package com.osmrecommend.data.event.edit;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.osmrecommend.data.event.Edit;
 import com.osmrecommend.persistence.domain.Way;
 
+@Component
 public class WayEdit extends Edit {
 
+	@Autowired
 	private Way way;
 	
 	/**
@@ -44,5 +49,6 @@ public class WayEdit extends Edit {
 		super();
 		this.way = way;
 	}
+	
 
 }

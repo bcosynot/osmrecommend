@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import com.osmrecommend.persistence.repositories.WayTagRepository;
 @Component
 public class WayPersistenceServiceImpl implements WayService {
 
+	private static final Logger logger = LoggerFactory.getLogger(WayPersistenceServiceImpl.class);
+	
 	@Autowired
 	WayRepository repo;
 	
@@ -26,16 +30,19 @@ public class WayPersistenceServiceImpl implements WayService {
 	
 	@Override
 	public Iterable<Way> getAllWays() {
+		logger.info("Inside getAllWays");
 		return repo.findAll();
 	}
 
 	@Override
 	public Way getWayById(Long id) {
+		logger.info("Inside getWayById");
 		return repo.findOne(id);
 	}
 
 	@Override
 	public LongSet getAllWayIDs() {
+		logger.info("Inside getAllWayIDs");
 
 		LongSet wayIds = new LongArraySet();
 		
@@ -49,6 +56,7 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public LongSet getAllUserIds() {
+		logger.info("Inside getAllUserIds");
 
 		LongSet userIds = new LongArraySet();
 		
@@ -64,7 +72,9 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public ObjectList<String> getTagsForWayId(Long wayId) {
+		logger.info("Inside getTagsForWayId");
 		
+		logger.info("fetching tags for way id:"+wayId);
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByWayId(wayId)) {
@@ -78,7 +88,9 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public ObjectList<String> getAllTags() {
+		logger.info("Inside getAllTags");
 
+		logger.info("fetching all way tags");
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {

@@ -4,6 +4,11 @@ import org.grouplens.grapht.annotation.DefaultProvider;
 import org.grouplens.lenskit.core.Shareable;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
 import org.grouplens.lenskit.vectors.SparseVector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -21,6 +26,8 @@ import java.util.Map;
 @DefaultProvider(TFIDFModelBuilder.class)
 public class TFIDFModel implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    private static final Logger logger = LoggerFactory.getLogger(TFIDFModel.class);
 
     private final Map<String, Long> tagIds;
     private final Map<Long, SparseVector> itemVectors;
@@ -35,7 +42,10 @@ public class TFIDFModel implements Serializable {
      * @param tagIds A map of tags to their IDs.
      * @param itemVectors A map of item IDs to tag vectors.
      */
-    TFIDFModel(Map<String,Long> tagIds, Map<Long,SparseVector> itemVectors) {
+    TFIDFModel(Object2LongMap<String> tagIds, Long2ObjectMap<SparseVector> itemVectors) {
+    	logger.info("Creating instance of TFIDFModel.");
+    	logger.info("Total tag ids: "+tagIds.size());
+    	logger.info("total item vectors: "+itemVectors.size());
         this.tagIds = tagIds;
         this.itemVectors = itemVectors;
     }

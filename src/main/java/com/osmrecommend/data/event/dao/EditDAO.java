@@ -10,6 +10,8 @@ import org.grouplens.lenskit.cursors.Cursors;
 import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.SortOrder;
 import org.grouplens.lenskit.data.event.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ import com.osmrecommend.persistence.service.WayService;
 @Component
 public class EditDAO implements EventDAO {
 
+	private static final Logger logger = LoggerFactory.getLogger(EditDAO.class);
+	
 	@Autowired
 	NodeService nodeService;
 	
@@ -32,8 +36,11 @@ public class EditDAO implements EventDAO {
 	@Override
 	public Cursor<Event> streamEvents() {
 
+		logger.info("stream all events");
+		
 		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
+		logger.info("fetching nodes..");
 		// Get all nodes
 		for(Node node : nodeService.getAllNodes()) {
 			
@@ -41,18 +48,20 @@ public class EditDAO implements EventDAO {
 			
 		}
 		
-		/*// Get all ways
+		logger.info("fetching ways...");
+		// Get all ways
 		for(Way way : wayService.getAllWays()) {
 			
 			allEdits.add(new WayEdit(way));
 			
-		}*/
+		}
 		
 		return Cursors.wrap(allEdits);
 	}
 
 	@Override
 	public <E extends Event> Cursor<E> streamEvents(Class<E> type) {
+		logger.info("stream events of type "+type.toString());
 		return streamEvents(type, SortOrder.ANY);
 	}
 
@@ -60,10 +69,12 @@ public class EditDAO implements EventDAO {
 	public <E extends Event> Cursor<E> streamEvents(Class<E> type,
 			SortOrder order) {
 		
+		logger.info("stream events of type "+type.toString()+" in order "+order.toString());
 		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
 		if(type == NodeEdit.class) {
 			
+			logger.info("type is NodeEdit");
 			// Get all nodes
 			for(Node node : nodeService.getAllNodes()) {
 
@@ -71,15 +82,16 @@ public class EditDAO implements EventDAO {
 
 			}
 			
-		}/* else if (type == WayEdit.class) {
+		} else if (type == WayEdit.class) {
 
+			logger.info("type is WayEdit");
 			// Get all ways
 			for(Way way : wayService.getAllWays()) {
 
 				allEdits.add(new WayEdit(way));
 
 			}
-		}*/
+		}
 		
 		Comparator<Event> comp = order.getEventComparator();
 		Cursor<Event> cursor = Cursors.wrap(allEdits);

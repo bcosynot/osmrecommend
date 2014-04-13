@@ -23,15 +23,18 @@ public class WayDAO implements ItemDAO {
 	
 	@Override
 	public LongSet getItemIds() {
+		logger.info("Fetching all Way IDs");
 		return service.getAllWayIDs();
 	}
 	
 	public ObjectList<String> getItemTags(long item) {
+		logger.info("Fetching way tags for id: "+item);
 		return service.getTagsForWayId(item);
 	}
 	
 	public ObjectOpenHashBigSet<String> getTagVocabulary() {
 		
+		logger.info("fetching tag vocabulary");
 		if(null==service) {
 			logger.info("service is null");
 		} else {
@@ -43,7 +46,7 @@ public class WayDAO implements ItemDAO {
 		if(null == (tempAllTags = service.getAllTags())) {
 			logger.info("tempAllTags is null");
 		} else {
-			logger.info("tempAllTags isn't null");
+			logger.info("tempAllTags isn't null. size:"+tempAllTags.size());
 			allTags.addAll(tempAllTags);
 		}
 		
