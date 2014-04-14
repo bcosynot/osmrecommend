@@ -2,7 +2,7 @@ package com.osmrecommend.persistence.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
+import java.util.HashMap;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import com.osmrecommend.util.HstoreUserType;
@@ -86,9 +85,8 @@ public class Way implements Serializable {
 	/**
 	 * All the tags this Way contains. 
 	 */
-	@Type(type = "hstore")
 	@Column(name = "tags")
-	private Map<String, String> tags; 
+	private HashMap<String, Object> tags; 
 	
 	@Column(name = "bbox")
 	private Geometry bbox;
@@ -130,14 +128,14 @@ public class Way implements Serializable {
 	/**
 	 * @return the tags
 	 */
-	public Map<String, String> getTags() {
+	public HashMap<String, Object> getTags() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(Map<String, String> tags) {
+	public void setTags(HashMap<String, Object> tags) {
 		this.tags = tags;
 	}
 

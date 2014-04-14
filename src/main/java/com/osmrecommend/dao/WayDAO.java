@@ -41,7 +41,7 @@ public class WayDAO implements ItemDAO {
 		}
 		return allWaysList;
 	}
-	
+
 	public ObjectOpenHashSet<String> getTagVocabulary() {
 		
 		logger.info("fetching tag vocabulary");

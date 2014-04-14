@@ -4,21 +4,23 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class ConverterUtil {
 
 	/**
-	 * @param mapOfTags
+	 * @param hashMap
 	 */
-	public static ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
+	public static ObjectList<String> convertMapOfTagsToCombinedList(HashMap<String,Object> hashMap) {
 		
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
-		for (Entry<String, String> e : mapOfTags.entrySet()) {
+		for (Entry<String, Object> e : hashMap.entrySet()) {
 
-			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
+			String value = (String) e.getValue();
+			tags.add(e.getKey().toLowerCase() + value.toLowerCase());
 
 		}
 		
