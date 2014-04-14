@@ -49,7 +49,10 @@ public class HstoreUserType implements UserType, Serializable {
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] strings, SessionImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
         String col = strings[0];
-        String val = resultSet.getString(col);
+        String val = "";
+        if(null !=  resultSet.getString(col)) {
+        		val = resultSet.getString(col);
+        }
         return HstoreHelper.toMap(val);
     }
 
@@ -77,6 +80,6 @@ public class HstoreUserType implements UserType, Serializable {
          * i'm not sure what value should be used here, but it works, AFAIK only
          * length of this array matters, as it is a column span (1 in our case)
          */
-        return new int[] { Types.VARCHAR };
+        return new int[] { Types.VARCHAR  };
     }
 }

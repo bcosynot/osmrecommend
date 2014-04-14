@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class ConverterUtil {
@@ -22,6 +23,11 @@ public class ConverterUtil {
 		}
 		
 		return tags;
+	}
+
+	public static ObjectList<String> convertMapOfTagsToCombinedList(
+			Map<String, String> tags) {
+		return convertMapOfTagsToCombinedList((Object2ObjectMap<String, String>)tags);
 	}
 	
 }
