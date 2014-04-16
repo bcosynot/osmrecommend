@@ -29,7 +29,7 @@ public class UserPersistenceServiceImpl implements UserService {
 		
 		for(User user : repo.findAll()) {
 			
-			userIds.add(user.getId());
+			userIds.add(user.getId().longValue());
 			
 		}
 		

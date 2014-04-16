@@ -65,7 +65,7 @@ public class AreaPersistenceServiceImpl implements AreaService {
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		Area area = repo.findOne(areaId);
-		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllNodeTags(area.getTheGeom())) {
+		/*for(Object2ObjectMap<String, String> mapOfTags : repo.findAllNodeTags(area.getTheGeom())) {
 			
 			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
 			
@@ -75,7 +75,7 @@ public class AreaPersistenceServiceImpl implements AreaService {
 			
 			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
 			
-		}
+		}*/
 		
 		return tags;
 	}

@@ -1,7 +1,5 @@
 package com.osmrecommend.persistence.domain;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,15 +12,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import com.osmrecommend.util.HstoreUserType;
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
 @Table(name = "nodes")
-@TypeDef(name = "hstore", typeClass = HstoreUserType.class)
 public class Node implements Serializable {
 
 	/**
@@ -37,20 +30,6 @@ public class Node implements Serializable {
 	
 	@Column(name="node_id")
 	private Long nodeId;
-	
-	/**
-	 * @return the nodeId
-	 */
-	public Long getNodeId() {
-		return nodeId;
-	}
-
-	/**
-	 * @param nodeId the nodeId to set
-	 */
-	public void setNodeId(Long nodeId) {
-		this.nodeId = nodeId;
-	}
 
 	@Column(name = "version")
 	private Integer version;
@@ -68,21 +47,35 @@ public class Node implements Serializable {
 	@Column(name = "geom")
 	private Geometry geom;
 	
-	@Type(type = "hstore")
-	@Column(name = "tags", columnDefinition = "hstore")
-	private Object2ObjectOpenHashMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
+	@Column(name = "tags")
+	private String tags;
+	
+
+	/**
+	 * @return the nodeId
+	 */
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	/**
+	 * @param nodeId the nodeId to set
+	 */
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
+	}
 
 	/**
 	 * @return the tags
 	 */
-	public Object2ObjectOpenHashMap<String, String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(Object2ObjectOpenHashMap<String, String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 

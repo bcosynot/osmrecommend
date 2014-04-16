@@ -2,10 +2,11 @@ package com.osmrecommend.persistence.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,9 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.TypeDef;
-
-import com.osmrecommend.util.HstoreUserType;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -31,7 +29,6 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 @Entity
 @Table(name = "ways")
-@TypeDef(name = "hstore", typeClass = HstoreUserType.class)
 @Cacheable
 public class Way implements Serializable {
 
@@ -86,7 +83,7 @@ public class Way implements Serializable {
 	 * All the tags this Way contains. 
 	 */
 	@Column(name = "tags")
-	private HashMap<String, Object> tags; 
+	private String tags; 
 	
 	@Column(name = "bbox")
 	private Geometry bbox;
@@ -95,7 +92,8 @@ public class Way implements Serializable {
 	private Geometry linestring;
 	
 	@Column(name = "nodes")
-	private Long[] nodes;
+	@ElementCollection(targetClass=Long.class)
+	private List<Long> nodes;
 	
 	/**
 	 * @return the wayId
@@ -114,28 +112,28 @@ public class Way implements Serializable {
 	/**
 	 * @return the nodes
 	 */
-	public Long[] getNodes() {
+	public List<Long> getNodes() {
 		return nodes;
 	}
 
 	/**
 	 * @param nodes the nodes to set
 	 */
-	public void setNodes(Long[] nodes) {
+	public void setNodes(List<Long> nodes) {
 		this.nodes = nodes;
 	}
 
 	/**
 	 * @return the tags
 	 */
-	public HashMap<String, Object> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(HashMap<String, Object> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 

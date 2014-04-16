@@ -2,6 +2,9 @@ package com.osmrecommend.persistence.repositories;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +18,9 @@ import com.osmrecommend.persistence.domain.Way;
 public interface WayRepository extends PagingAndSortingRepository<Way, Long> {
 
 	public Iterable<Way> findByUser(User user);
+	
+	@Query("SELECT w FROM Way w")
+	public List<Way> findSome(Pageable pageable);
 	
 	@Query("SELECT w.tags FROM Way w")
 	public Iterable<Object2ObjectMap<String, String>> findAllTags();

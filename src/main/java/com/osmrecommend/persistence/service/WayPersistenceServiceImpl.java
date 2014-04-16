@@ -25,21 +25,27 @@ public class WayPersistenceServiceImpl implements WayService {
 	
 	@Override
 	public Iterable<Way> getAllWays() {
+		
 		logger.info("Inside getAllWays");
+		
 		Long ts = System.currentTimeMillis();
 		Iterable<Way> allWays = repo.findAll();
-		logger.info("All ways fetched in "+(System.currentTimeMillis() - ts)/1000+"s");
+		logger.info("All ways fetched in " + (System.currentTimeMillis() - ts)/1000 + "s");
+		
 		return allWays;
+		
 	}
 
 	@Override
 	public Way getWayById(Long id) {
+		
 		logger.info("Inside getWayById");
 		return repo.findOne(id);
 	}
 
 	@Override
 	public LongSet getAllWayIDs() {
+		
 		logger.info("Inside getAllWayIDs");
 
 		LongSet wayIds = new LongArraySet();
@@ -54,6 +60,7 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public LongSet getAllUserIds() {
+		
 		logger.info("Inside getAllUserIds");
 
 		LongSet userIds = new LongArraySet();
@@ -70,6 +77,7 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public ObjectList<String> getTagsForWayId(Long wayId) {
+		
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByWayId(wayId)) {
@@ -79,13 +87,14 @@ public class WayPersistenceServiceImpl implements WayService {
 		}
 		
 		return tags;
+		
 	}
 
 	@Override
 	public ObjectList<String> getAllTags() {
+		
 		logger.info("Inside getAllTags");
 
-		logger.info("fetching all way tags");
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {

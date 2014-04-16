@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.util.ConverterUtil;
+import com.osmrecommend.util.HstoreHelper;
 
 /**
  * Builder for computing {@linkplain TFIDFModel TF-IDF models} from item tag data.  Each item is
@@ -94,7 +95,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             // Now the vector is empty (all keys are 'unset').
             // Populate the work vector with the number of times each tag is applied to this item.
             // First, get the list of tags for an item.
-            ObjectList<String> itemTags = ConverterUtil.convertMapOfTagsToCombinedList(item.getTags());
+            ObjectList<String> itemTags = ConverterUtil.convertMapOfTagsToCombinedList(HstoreHelper.toMap(item.getTags()));
             // Iterate over this list.
             for(String tag: itemTags) {
             	// Fetch the numeric Id for this tag.
@@ -203,7 +204,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 		
 		for(Way way : allWays) {
 			
-			allTags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(way.getTags()));
+			allTags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(HstoreHelper.toMap(way.getTags())));
 			
 		}
 		
