@@ -40,12 +40,20 @@ public class OSMRecommendEval {
 
 	public static final Logger logger = LoggerFactory.getLogger(OSMRecommendEval.class);
 	
+	public OSMRecommendEval() {
+		super();
+		logger.info("inside OSMRecommendEval constructor.");
+	}
+	
 	public static void main(String args[]) { 
 
-		logger.debug("initialising app context..");
+		logger.info("initialising app context..");
 		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
+		logger.info("registering jpaconfiguration");
 		appContext.register(JPAConfiguration.class);
+		logger.info("refreshing context");
 		appContext.refresh();
+		logger.info("context refreshed");
 		
 		/*Lenkskit*/
 		
