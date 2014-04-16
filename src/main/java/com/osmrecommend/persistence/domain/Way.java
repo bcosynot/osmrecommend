@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -86,9 +88,11 @@ public class Way implements Serializable {
 	private String tags; 
 	
 	@Column(name = "bbox")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry bbox;
 	
 	@Column(name = "linestring")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry linestring;
 	
 	@Column(name = "nodes")
@@ -143,12 +147,26 @@ public class Way implements Serializable {
 	public void setBbox(Geometry bbox) {
 		this.bbox = bbox;
 	}
+	
+	/**
+	 * @return the bbox
+	 */
+	public Geometry getBbox() {
+		return bbox;
+	}
 
 	/**
 	 * @param linestring the linestring to set
 	 */
 	public void setLinestring(Geometry linestring) {
 		this.linestring = linestring;
+	}
+
+	/**
+	 * @return the linestring
+	 */
+	public Geometry getLinestring() {
+		return linestring;
 	}
 
 	public Long getId() {

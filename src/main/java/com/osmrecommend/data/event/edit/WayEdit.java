@@ -28,7 +28,7 @@ public class WayEdit extends Edit {
 
 	@Override
 	public long getItemId() {
-		return way.getId();
+		return way.getWayId();
 	}
 
 	@Override

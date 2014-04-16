@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
@@ -45,6 +47,7 @@ public class Node implements Serializable {
 	private Long changesetId;
 	
 	@Column(name = "geom")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry geom;
 	
 	@Column(name = "tags")

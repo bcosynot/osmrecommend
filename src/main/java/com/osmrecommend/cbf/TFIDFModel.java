@@ -25,7 +25,8 @@ import java.util.Map;
 // This model class will be built by the model builder
 @DefaultProvider(TFIDFModelBuilder.class)
 public class TFIDFModel implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
     
     private static final Logger logger = LoggerFactory.getLogger(TFIDFModel.class);
 
@@ -43,6 +44,7 @@ public class TFIDFModel implements Serializable {
      * @param itemVectors A map of item IDs to tag vectors.
      */
     TFIDFModel(Object2LongMap<String> tagIds, Long2ObjectMap<SparseVector> itemVectors) {
+    	
     	logger.info("Creating instance of TFIDFModel.");
     	logger.info("Total tag ids: "+tagIds.size());
     	logger.info("total item vectors: "+itemVectors.size());

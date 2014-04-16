@@ -65,6 +65,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      */
     @Override
     public TFIDFModel get() {
+    	
     	logger.info("computing model");
         // Build a map of tags to numeric IDs.  This lets you convert tags (which are strings)
         // into long IDs that you can use as keys in a tag vector.
@@ -196,15 +197,19 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         }
         logger.info("finished assigning ids to tags. size: "+tagIds.size());
         return tagIds;
+        
     }
 
 	private ObjectOpenHashSet<String> getTagVocabulary() {
+		
 		logger.info("creating tag vocabulary");
 		ObjectOpenHashSet<String> allTags = new ObjectOpenHashSet<String>();
 		
 		for(Way way : allWays) {
 			
-			allTags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(HstoreHelper.toMap(way.getTags())));
+			allTags.addAll(
+					ConverterUtil.convertMapOfTagsToCombinedList(
+							HstoreHelper.toMap(way.getTags())));
 			
 		}
 		
