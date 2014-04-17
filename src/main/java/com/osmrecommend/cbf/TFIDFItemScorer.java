@@ -10,6 +10,8 @@ import org.grouplens.lenskit.data.dao.UserEventDAO;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
 import org.grouplens.lenskit.vectors.SparseVector;
 import org.grouplens.lenskit.vectors.VectorEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.osmrecommend.data.event.edit.NodeEdit;
@@ -19,23 +21,28 @@ import com.osmrecommend.data.event.edit.NodeEdit;
  */
 @Configurable
 public class TFIDFItemScorer extends AbstractItemScorer {
-    private final UserEventDAO dao;
+	
+	private static final Logger logger = LoggerFactory.getLogger(TFIDFItemScorer.class);
+   
+	@Inject
+	private UserEventDAO dao;
+	
     private final TFIDFModel model;
 
-    /**
+ 	/**
      * Construct a new item scorer.  LensKit's dependency injector will call this constructor and
      * provide the appropriate parameters.
      *
      * @param dao The user-event DAO, so we can fetch a user's ratings when scoring items for them.
      * @param m   The precomputed model containing the item tag vectors.
      */
-    @Inject
-    public TFIDFItemScorer(UserEventDAO dao, TFIDFModel m) {
-        this.dao = dao;
-        model = m;
+    public TFIDFItemScorer(TFIDFModel model) {
+    	
+    	logger.info("Creating isntance of TFIDFItemscorer");
+        this.model = model;
     }
 
-    /**
+	/**
      * Generate item scores personalized for a particular user.  For the TFIDF scorer, this will
      * prepare a user profile and compare it to item tag vectors to produce the score.
      *
@@ -46,7 +53,8 @@ public class TFIDFItemScorer extends AbstractItemScorer {
      */
     @Override
     public void score(long user, @Nonnull MutableSparseVector output) {
-        // Get the user's profile, which is a vector with their 'like' for each tag
+        
+    	// Get the user's profile, which is a vector with their 'like' for each tag
         SparseVector userVector = makeUserVector(user);
 
         // Loop over each item requested and score it.

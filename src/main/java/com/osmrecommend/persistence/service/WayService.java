@@ -12,6 +12,8 @@ public interface WayService {
 
 	public Iterable<Way> getAllWays();
 	
+	public Iterable<Way> getSomeWays(int limit);
+	
 	public Way getWayById(Long id);
 	
 	public LongSet getAllWayIDs();

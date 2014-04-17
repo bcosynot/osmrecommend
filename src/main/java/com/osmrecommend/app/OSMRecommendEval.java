@@ -1,5 +1,7 @@
 package com.osmrecommend.app;
 
+import it.unimi.dsi.fastutil.objects.ObjectList;
+
 import java.io.File;
 import java.util.Iterator;
 import java.util.Properties;
@@ -29,16 +31,20 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.cbf.TFIDFItemScorer;
+import com.osmrecommend.cbf.TFIDFModelBuilder;
 import com.osmrecommend.config.JPAConfiguration;
 import com.osmrecommend.dao.CustomUserDAO;
 import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
 import com.osmrecommend.data.event.edit.WayEdit;
+import com.osmrecommend.persistence.domain.Way;
 
 @Component
 public class OSMRecommendEval {
 
 	public static final Logger logger = LoggerFactory.getLogger(OSMRecommendEval.class);
+	
+	private static WayDAO wayDAO;
 	
 	public OSMRecommendEval() {
 		super();
@@ -54,6 +60,7 @@ public class OSMRecommendEval {
 		logger.info("refreshing context");
 		appContext.refresh();
 		logger.info("context refreshed");
+		wayDAO = appContext.getBean(WayDAO.class);
 		
 		/*Lenkskit*/
 		
@@ -75,9 +82,6 @@ public class OSMRecommendEval {
 		AlgorithmInstanceBuilder algo = new AlgorithmInstanceBuilder("tfdidf");
 		LenskitConfiguration lenskitConfig = algo.getConfig();
 		
-		// Use item-item CF to score items
-		lenskitConfig.bind(ItemScorer.class).to(TFIDFItemScorer.class);
-
 		lenskitConfig.bind(EventDAO.class)
 				.to(appContext.getBean(EditDAO.class));
 
@@ -85,7 +89,13 @@ public class OSMRecommendEval {
 
 		lenskitConfig.bind(UserDAO.class).to(CustomUserDAO.class);
 
-		lenskitConfig.bind(ItemDAO.class).to(appContext.getBean(WayDAO.class));
+		lenskitConfig.bind(ItemDAO.class).to(wayDAO);
+		
+		// Use item-item CF to score items
+		logger.info("fetch all ways");
+		ObjectList<Way> allWays = wayDAO.getAllWays();
+		TFIDFItemScorer itemScorerInstance = new TFIDFItemScorer(new TFIDFModelBuilder(wayDAO, allWays).get());
+		lenskitConfig.bind(ItemScorer.class).to(itemScorerInstance);
 		
 		simpleEval.addAlgorithm(algo);
 		simpleEval.addMetric(new CoveragePredictMetric());

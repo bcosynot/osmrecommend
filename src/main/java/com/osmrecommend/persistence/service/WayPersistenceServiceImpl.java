@@ -9,6 +9,8 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Way;
@@ -33,6 +35,20 @@ public class WayPersistenceServiceImpl implements WayService {
 		logger.info("All ways fetched in " + (System.currentTimeMillis() - ts)/1000 + "s");
 		
 		return allWays;
+		
+	}
+	
+	@Override
+	public Iterable<Way> getSomeWays(int limit) {
+		
+		logger.info("Inside getSomeWays");
+		
+		Pageable page = new PageRequest(0, limit);
+		Long ts = System.currentTimeMillis();
+		Iterable<Way> someWays = repo.findSome(page);
+		logger.info("Some ways fetched in " + (System.currentTimeMillis() - ts)/1000 + "s");
+		
+		return someWays;
 		
 	}
 

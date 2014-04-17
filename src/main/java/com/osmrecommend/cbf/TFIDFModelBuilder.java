@@ -38,7 +38,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
 	
 	@Autowired
 	private WayDAO dao;
-
+	
 	private ObjectList<Way> allWays;
 
     /**
@@ -52,11 +52,24 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
      *            to the DAO).  This allows LensKit to configure your recommender components
      *            properly.  It's up to you to keep this promise.</p>
      */
-    @Inject
-    public TFIDFModelBuilder(@Transient WayDAO dao) {
-    	logger.info("creating TFIDFModelBuilder using custom constructor with "+dao.toString());
-        this.dao = dao;
-		allWays = dao.getAllWays();
+    public TFIDFModelBuilder(WayDAO dao, ObjectList<Way> allWays) {
+    	
+    	logger.info("creating TFIDFModelBuilder using custom constructor");
+        
+    	if(null == this.dao) {
+    		this.dao = dao;
+    	}
+    	
+        if(null == allWays) {
+        	
+        	logger.info("List of ways not specified");
+        	this.allWays = dao.getAllWays();
+        	
+        } else {
+        	
+        	this.allWays = allWays;
+        	
+        }
     }
 
     /**
