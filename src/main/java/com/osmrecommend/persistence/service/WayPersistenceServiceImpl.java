@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.domain.Way;
 import com.osmrecommend.persistence.repositories.WayRepository;
 import com.osmrecommend.util.ConverterUtil;
@@ -121,6 +122,11 @@ public class WayPersistenceServiceImpl implements WayService {
 		
 		return tags;
 		
+	}
+
+	@Override
+	public Iterable<Way> getAllForUser(User user) {
+		return repo.findByUser(user);
 	}
 	
 }

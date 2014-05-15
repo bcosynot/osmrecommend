@@ -16,25 +16,41 @@ public class UserPersistenceServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository repo;
-	
+
 	@Override
-	public User getUser(Long id) {
-		return repo.findOne(id);
+	public User getUser(Long id) throws Exception {
+		User user = null;
+		if (null == (user = repo.findOne(id))) {
+			throw new Exception("User not found with ID : " + id);
+		} else {
+			return user;
+		}
 	}
-	
+
 	@Override
 	public LongSet getAllUserIDs() {
-		
+
 		ObjectList<Long> userIds = new ObjectArrayList<Long>();
+
+		for (User user : repo.findAll()) {
+
+			userIds.add(user.getId().longValue());
+
+		}
+
+		return LongUtils.packedSet(userIds);
+	}
+
+	@Override
+	public ObjectList<User> getAllUsers() {
+		
+		ObjectList<User> allUsers = new ObjectArrayList<User>();
 		
 		for(User user : repo.findAll()) {
-			
-			userIds.add(user.getId().longValue());
-			
+			allUsers.add(user);
 		}
 		
-		
-		return LongUtils.packedSet(userIds);
+		return allUsers;
 	}
 
 }

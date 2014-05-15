@@ -21,7 +21,9 @@ public interface NodeService {
 	
 	public LongSet getAllUserIds();
 	
-	public Iterable<Node> getAllByUser(User user);
+	public Iterable<Node> getAllForUser(Long user);
+	
+	public Iterable<Node> getAllForUser(User user);
 	
 	public ObjectList<String> getAllTags();
 }

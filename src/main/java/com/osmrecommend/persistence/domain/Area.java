@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
@@ -22,7 +24,7 @@ public class Area implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "gid")
 	private Long id;
 	
 	@Column(name = "x1")
@@ -38,6 +40,7 @@ public class Area implements Serializable {
 	private Double y2;
 	
 	@Column(name = "the_geom")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry theGeom;
 
 	/**

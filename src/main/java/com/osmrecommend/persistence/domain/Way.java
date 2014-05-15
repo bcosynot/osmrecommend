@@ -11,12 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -65,7 +67,8 @@ public class Way implements Serializable {
 	 * The {@link User} that edited this version. 
 	 */
 	@OneToOne
-	@PrimaryKeyJoinColumn(name = "user_id")
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	/**

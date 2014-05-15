@@ -23,6 +23,8 @@ import com.osmrecommend.dao.AreaDAO;
 import com.osmrecommend.dao.NodeDAO;
 import com.osmrecommend.dao.WayDAO;
 import com.osmrecommend.data.event.dao.EditDAO;
+import com.osmrecommend.persistence.repositories.AreaRepositoryCustom;
+import com.osmrecommend.persistence.repositories.AreaRepositoryCustomImpl;
 
 
 @EnableJpaRepositories(basePackages = "com.osmrecommend.persistence.repositories")
@@ -98,11 +100,6 @@ public class JPAConfiguration {
 	}
 	
 	@Bean
-	public EditDAO editDAO() {
-		return new EditDAO();
-	}
-	
-	@Bean
 	public NodeDAO nodeDAO() {
 		return new NodeDAO();
 	}
@@ -116,6 +113,10 @@ public class JPAConfiguration {
 	public AreaDAO areaDAO() {
 		return new AreaDAO();
 	}
-	
+
+	/*@Bean
+	public AreaRepositoryCustom areaRepositoryCustom() {
+		return new AreaRepositoryCustomImpl();
+	}*/
 	
 }

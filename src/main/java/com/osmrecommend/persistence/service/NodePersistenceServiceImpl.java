@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.NodeRepository;
+import com.osmrecommend.persistence.repositories.UserRepository;
 import com.osmrecommend.util.ConverterUtil;
 
 @Component
@@ -19,6 +20,9 @@ public class NodePersistenceServiceImpl implements NodeService {
 
 	@Autowired
 	NodeRepository repo;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Override
 	public Iterable<Node> getAllNodes() {
@@ -56,10 +60,16 @@ public class NodePersistenceServiceImpl implements NodeService {
 		return userIds;
 		
 	}
+	
+	@Override
+	public Iterable<Node> getAllForUser(Long userId) {
+		User user = userRepo.findOne(userId);
+		return getAllForUser(user);
+	}
 
 	@Override
-	public Iterable<Node> getAllByUser(User user) {
-		return repo.findByUser(user);
+	public Iterable<Node> getAllForUser(User user) {
+		return repo.findAllNodesForUser(user);
 	}
 
 	@Override

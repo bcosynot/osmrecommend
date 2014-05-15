@@ -33,4 +33,8 @@ public interface WayRepository extends PagingAndSortingRepository<Way, Long> {
 	@Query("SELECT w.wayId FROM Way w")
 	public Iterable<Long> findAllWayIds();
 	
+	@Override
+	@Query("SELECT w FROM Way w LEFT JOIN FETCH w.user")
+	public Iterable<Way> findAll();
+	
 }

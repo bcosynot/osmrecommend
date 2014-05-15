@@ -3,13 +3,14 @@
  */
 package com.osmrecommend.persistence.service;
 
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.springframework.stereotype.Service;
 
 import com.osmrecommend.persistence.domain.Area;
-import com.osmrecommend.persistence.domain.User;
 
 /**
  * @author Vivek
@@ -28,8 +29,14 @@ public interface AreaService {
 	
 	public LongSet getAllUserIds();
 	
-	public Iterable<Area> getAllByUser(User user);
-	
 	public ObjectList<String> getAllTags();
+	
+	public Long2LongMap findAllNodesByArea();
+	
+	public Long2ObjectMap<ObjectList<String>> getAllNodeTagsByArea();
+	
+	public Long2LongMap findAllWaysByArea();
+	
+	public Long2ObjectMap<ObjectList<String>> getAllWayTagsByArea();
 	
 }
