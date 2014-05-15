@@ -4,7 +4,18 @@ apply plugin:'application'
 
 repositories {
 	mavenCentral()
+	maven {
+		url "http://download.osgeo.org/webdav/geotools"
+	}
+	maven {
+		url "http://www.hibernatespatial.org/repository"
+	}
 }
+
+configurations {
+	lenskiteval
+}
+
 dependencies {
 	
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43-RELEASE'
@@ -17,16 +28,24 @@ dependencies {
 	compile 'org.springframework.data:spring-data-jpa:1.3.4.RELEASE'
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final'
 	compile 'org.hibernate:hibernate-entitymanager:4.0.1.Final'
+	compile 'org.hibernate:hibernate-spatial:4.0'
 	
 	compile 'org.slf4j:slf4j-api:1.7.6'
-	runtime 'org.slf4j:slf4j-jdk14:1.7.6'
+	runtime 'org.slf4j:slf4j-log4j12:1.7.6'
+    runtime 'log4j:log4j:1.2.14'
 	
 	compile 'commons-configuration:commons-configuration:1.10'
+	lenskiteval 'org.grouplens.lenskit:lenskit-eval:2.1-M2'
 }
 
 // tag::wrapper[]
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.11'
+}
+
+task lenskitEval(type: JavaExec) {
+	classpath configurations.lenskiteval
+	main 'org.grouplens.lenskit.eval.cli.EvalCLI'
 }
 
 mainClassName = "com.osmrecommend.app.OSMRecommend"

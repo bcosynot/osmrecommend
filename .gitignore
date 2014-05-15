@@ -6,3 +6,5 @@ build
 .gradle
 app.properties
 log4j.properties
+runLog.log
+customgds-crossfold

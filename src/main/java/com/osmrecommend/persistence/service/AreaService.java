@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.osmrecommend.persistence.service;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -5,23 +8,28 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.springframework.stereotype.Service;
 
-import com.osmrecommend.persistence.domain.Node;
+import com.osmrecommend.persistence.domain.Area;
 import com.osmrecommend.persistence.domain.User;
 
+/**
+ * @author Vivek
+ *
+ */
 @Service
-public interface NodeService {
+public interface AreaService {
 
-	public Iterable<Node> getAllNodes();
+	public LongSet getAllAreaIDs();
 	
-	public Node getNodeById(Long id);
+	public Iterable<Area> getAllAreas();
 	
-	public LongSet getAllNodeIDs();
+	public Area getAreaById(Long id);
 	
-	public ObjectList<String> getTagsForNodeId(Long nodeId);
+	public ObjectList<String> getTagsForAreaId(Long areaId);
 	
 	public LongSet getAllUserIds();
 	
-	public Iterable<Node> getAllByUser(User user);
+	public Iterable<Area> getAllByUser(User user);
 	
 	public ObjectList<String> getAllTags();
+	
 }

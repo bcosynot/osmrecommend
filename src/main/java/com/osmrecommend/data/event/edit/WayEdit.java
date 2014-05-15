@@ -36,7 +36,12 @@ public class WayEdit extends Edit {
 		return way.getTimestamp().getTime();
 	}
 	
+	public WayEdit() {
+		super();
+	}
+	
 	public WayEdit(Way way) {
+		super();
 		this.way = way;
 	}
 

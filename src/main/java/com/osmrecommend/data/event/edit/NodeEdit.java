@@ -43,7 +43,9 @@ public class NodeEdit extends Edit {
 	public void setNode(Node node) {
 		this.node = node;
 	}
-	
-	
+
+	public NodeEdit() {
+		super();
+	}
 
 }

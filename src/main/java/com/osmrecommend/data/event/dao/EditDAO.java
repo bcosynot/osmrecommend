@@ -1,8 +1,9 @@
 package com.osmrecommend.data.event.dao;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+
 import java.util.Comparator;
-import java.util.List;
 
 import org.grouplens.lenskit.cursors.Cursor;
 import org.grouplens.lenskit.cursors.Cursors;
@@ -10,18 +11,16 @@ import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.SortOrder;
 import org.grouplens.lenskit.data.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
 
 import com.osmrecommend.data.event.edit.NodeEdit;
 import com.osmrecommend.data.event.edit.WayEdit;
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.Way;
-import com.osmrecommend.persistence.service.NodePersistenceServiceImp;
 import com.osmrecommend.persistence.service.NodeService;
-import com.osmrecommend.persistence.service.WayPersistenceServiceImpl;
 import com.osmrecommend.persistence.service.WayService;
 
-@Configurable
+@Component
 public class EditDAO implements EventDAO {
 
 	@Autowired
@@ -33,7 +32,7 @@ public class EditDAO implements EventDAO {
 	@Override
 	public Cursor<Event> streamEvents() {
 
-		List<Event> allEdits = new ArrayList<Event>();
+		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
 		// Get all nodes
 		for(Node node : nodeService.getAllNodes()) {
@@ -42,12 +41,12 @@ public class EditDAO implements EventDAO {
 			
 		}
 		
-		// Get all ways
+		/*// Get all ways
 		for(Way way : wayService.getAllWays()) {
 			
-			allEdits.add((Event) new WayEdit(way));
+			allEdits.add(new WayEdit(way));
 			
-		}
+		}*/
 		
 		return Cursors.wrap(allEdits);
 	}
@@ -61,7 +60,7 @@ public class EditDAO implements EventDAO {
 	public <E extends Event> Cursor<E> streamEvents(Class<E> type,
 			SortOrder order) {
 		
-		List<Event> allEdits = new ArrayList<Event>();
+		ObjectList<Event> allEdits = new ObjectArrayList<Event>();
 
 		if(type == NodeEdit.class) {
 			
@@ -72,7 +71,7 @@ public class EditDAO implements EventDAO {
 
 			}
 			
-		} else if (type == WayEdit.class) {
+		}/* else if (type == WayEdit.class) {
 
 			// Get all ways
 			for(Way way : wayService.getAllWays()) {
@@ -80,7 +79,7 @@ public class EditDAO implements EventDAO {
 				allEdits.add(new WayEdit(way));
 
 			}
-		}
+		}*/
 		
 		Comparator<Event> comp = order.getEventComparator();
 		Cursor<Event> cursor = Cursors.wrap(allEdits);
@@ -96,13 +95,13 @@ public class EditDAO implements EventDAO {
 	/**
 	 * 
 	 */
-	public EditDAO() {
+	/*public EditDAO() {
 		super();
 		
-		nodeService = new NodePersistenceServiceImp();
+		nodeService = new NodePersistenceServiceImpl();
 		wayService = new WayPersistenceServiceImpl();
 		
-	}
+	}*/
 	
 	
 

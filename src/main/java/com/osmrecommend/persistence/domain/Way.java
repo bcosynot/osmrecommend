@@ -1,5 +1,7 @@
 package com.osmrecommend.persistence.domain;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,10 +14,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.postgis.PGgeometry;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import com.osmrecommend.util.HstoreUserType;
+import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
 @Table(name = "ways")
+@TypeDef(name = "hstore", typeClass = HstoreUserType.class)
 public class Way implements Serializable {
 
 	/**
@@ -27,6 +34,9 @@ public class Way implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
+	
+	@Column(name = "way_id")
+	private Long wayId;
 	
 	@Column(name = "version")
 	private Integer version;
@@ -42,11 +52,74 @@ public class Way implements Serializable {
 	@Column(name = "changeset_id")
 	private Long changesetId;
 	
+	@Type(type = "hstore")
+	@Column(name = "tags", columnDefinition = "hstore")
+	private Object2ObjectOpenHashMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>(); 
+	
 	@Column(name = "bbox")
-	private PGgeometry bbox;
+	private Geometry bbox;
 	
 	@Column(name = "linestring")
-	private PGgeometry linestring;
+	private Geometry linestring;
+	
+	@Column(name = "nodes")
+	private Long[] nodes;
+	
+	/**
+	 * @return the wayId
+	 */
+	public Long getWayId() {
+		return wayId;
+	}
+
+	/**
+	 * @param wayId the wayId to set
+	 */
+	public void setWayId(Long wayId) {
+		this.wayId = wayId;
+	}
+
+	/**
+	 * @return the nodes
+	 */
+	public Long[] getNodes() {
+		return nodes;
+	}
+
+	/**
+	 * @param nodes the nodes to set
+	 */
+	public void setNodes(Long[] nodes) {
+		this.nodes = nodes;
+	}
+
+	/**
+	 * @return the tags
+	 */
+	public Object2ObjectOpenHashMap<String, String> getTags() {
+		return tags;
+	}
+
+	/**
+	 * @param tags the tags to set
+	 */
+	public void setTags(Object2ObjectOpenHashMap<String, String> tags) {
+		this.tags = tags;
+	}
+
+	/**
+	 * @param bbox the bbox to set
+	 */
+	public void setBbox(Geometry bbox) {
+		this.bbox = bbox;
+	}
+
+	/**
+	 * @param linestring the linestring to set
+	 */
+	public void setLinestring(Geometry linestring) {
+		this.linestring = linestring;
+	}
 
 	public Long getId() {
 		return id;
@@ -88,20 +161,4 @@ public class Way implements Serializable {
 		this.changesetId = changesetId;
 	}
 
-	public PGgeometry getBbox() {
-		return bbox;
-	}
-
-	public void setBbox(PGgeometry bbox) {
-		this.bbox = bbox;
-	}
-
-	public PGgeometry getLinestring() {
-		return linestring;
-	}
-
-	public void setLinestring(PGgeometry linestring) {
-		this.linestring = linestring;
-	}
-	
 }

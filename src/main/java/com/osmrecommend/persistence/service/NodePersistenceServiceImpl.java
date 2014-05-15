@@ -11,50 +11,50 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.osmrecommend.persistence.domain.Way;
-import com.osmrecommend.persistence.repositories.WayRepository;
-import com.osmrecommend.persistence.repositories.WayTagRepository;
+import com.osmrecommend.persistence.domain.Node;
+import com.osmrecommend.persistence.domain.User;
+import com.osmrecommend.persistence.repositories.NodeRepository;
+import com.osmrecommend.persistence.repositories.NodeTagRepository;
 
 @Component
-public class WayPersistenceServiceImpl implements WayService {
+public class NodePersistenceServiceImpl implements NodeService {
 
 	@Autowired
-	WayRepository repo;
+	NodeRepository repo;
 	
 	@Autowired
-	WayTagRepository tagRepo;
+	NodeTagRepository tagRepo;
 	
 	@Override
-	public Iterable<Way> getAllWays() {
+	public Iterable<Node> getAllNodes() {
 		return repo.findAll();
 	}
 
 	@Override
-	public Way getWayById(Long id) {
+	public Node getNodeById(Long id) {
 		return repo.findOne(id);
 	}
 
 	@Override
-	public LongSet getAllWayIDs() {
-
-		LongSet wayIds = new LongArraySet();
+	public LongSet getAllNodeIDs() {
 		
-		for(Way way : repo.findAll()) {
-			wayIds.add(way.getId());
+		LongSet nodeIds = new LongArraySet();
+		
+		for(Long nodeId : repo.findAllNodeIds()) {
+			nodeIds.add(nodeId);
 		}
 		
-		return wayIds;
-		
+		return nodeIds;
 	}
 
 	@Override
 	public LongSet getAllUserIds() {
-
+		
 		LongSet userIds = new LongArraySet();
 		
-		for(Way way : repo.findAll()) {
+		for(Node node : repo.findAll()) {
 			
-			userIds.add(way.getUser().getId());
+			userIds.add(node.getUser().getId());
 			
 		}
 		
@@ -63,11 +63,16 @@ public class WayPersistenceServiceImpl implements WayService {
 	}
 
 	@Override
-	public ObjectList<String> getTagsForWayId(Long wayId) {
+	public Iterable<Node> getAllByUser(User user) {
+		return repo.findByUser(user);
+	}
+
+	@Override
+	public ObjectList<String> getTagsForNodeId(Long nodeId) {
 		
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
-		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByWayId(wayId)) {
+		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByNodeId(nodeId)) {
 			
 			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
 			
@@ -78,7 +83,7 @@ public class WayPersistenceServiceImpl implements WayService {
 
 	@Override
 	public ObjectList<String> getAllTags() {
-
+		
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
@@ -90,7 +95,7 @@ public class WayPersistenceServiceImpl implements WayService {
 		return tags;
 		
 	}
-	
+
 	/**
 	 * @param mapOfTags
 	 */
@@ -106,5 +111,7 @@ public class WayPersistenceServiceImpl implements WayService {
 		
 		return tags;
 	}
+
+	
 
 }
