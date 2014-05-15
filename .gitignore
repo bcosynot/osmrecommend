@@ -10,3 +10,6 @@ runLog.log
 customgds-crossfold
 eval-results.csv
 runLog.log.1
+*.log
+*.csv
+crossfold*
