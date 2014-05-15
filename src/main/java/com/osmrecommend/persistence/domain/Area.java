@@ -1,5 +1,7 @@
 package com.osmrecommend.persistence.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,15 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
 @Table(name = "areas")
-public class Area {
+public class Area implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6546127803619615227L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "gid")
 	private Long id;
 	
 	@Column(name = "x1")
@@ -31,6 +40,7 @@ public class Area {
 	private Double y2;
 	
 	@Column(name = "the_geom")
+	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Geometry theGeom;
 
 	/**

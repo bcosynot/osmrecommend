@@ -3,6 +3,8 @@
  */
 package com.osmrecommend.persistence.service;
 
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -15,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Area;
-import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.AreaRepository;
+import com.osmrecommend.persistence.repositories.AreaRepositoryCustom;
 import com.osmrecommend.persistence.repositories.NodeRepository;
 import com.osmrecommend.persistence.repositories.UserRepository;
 import com.osmrecommend.persistence.repositories.WayRepository;
@@ -65,6 +67,7 @@ public class AreaPersistenceServiceImpl implements AreaService {
 		ObjectList<String> tags = new ObjectArrayList<String>();
 		
 		Area area = repo.findOne(areaId);
+		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllNodeTags(area.getTheGeom())) {
 			
 			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
@@ -88,15 +91,6 @@ public class AreaPersistenceServiceImpl implements AreaService {
 		userIds.addAll(userRepo.findAllUserIds());
 		
 		return userIds;
-	}
-
-	@Override
-	public Iterable<Area> getAllByUser(User user) {
-
-		ObjectList<Area> areas = new ObjectArrayList<Area>();
-		//TODO
-		//TODO:22877
-		return null;
 	}
 
 	@Override
@@ -133,6 +127,29 @@ public class AreaPersistenceServiceImpl implements AreaService {
 		}
 		
 		return tags;
+	}
+	
+	@Autowired
+	AreaRepositoryCustom customRepo;
+
+	@Override
+	public Long2ObjectMap<ObjectList<String>> getAllNodeTagsByArea() {
+		return customRepo.fetchAllNodeTags();
+	}
+
+	@Override
+	public Long2ObjectMap<ObjectList<String>> getAllWayTagsByArea() {
+		return customRepo.fetchAllWayTags();
+	}
+
+	@Override
+	public Long2LongMap findAllNodesByArea() {
+		return customRepo.fetchAllNodes();
+	}
+
+	@Override
+	public Long2LongMap findAllWaysByArea() {
+		return customRepo.fetchAllWays();
 	}
 
 }

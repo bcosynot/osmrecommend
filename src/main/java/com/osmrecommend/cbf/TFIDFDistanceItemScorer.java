@@ -1,10 +1,10 @@
 package com.osmrecommend.cbf;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import javax.annotation.Nonnull;
 
-import org.grouplens.lenskit.basic.AbstractItemScorer;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
 import org.grouplens.lenskit.vectors.SparseVector;
 import org.grouplens.lenskit.vectors.VectorEntry;
@@ -15,19 +15,22 @@ import org.springframework.beans.factory.annotation.Configurable;
 import com.osmrecommend.data.event.CustomUserHistory;
 import com.osmrecommend.data.event.Edit;
 import com.osmrecommend.data.event.dao.CustomUserEventDAO;
+import com.osmrecommend.persistence.domain.Area;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author <a href="http://www.grouplens.org">GroupLens Research</a>
  */
 @Configurable
-public class TFIDFItemScorer extends AbstractItemScorer {
+public class TFIDFDistanceItemScorer extends TFIDFItemScorer {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(TFIDFItemScorer.class);
+			.getLogger(TFIDFDistanceItemScorer.class);
 
-	protected CustomUserEventDAO dao;
+	Long2ObjectMap<Area> allAreas;
 
-	protected TFIDFModel model;
+	int distanceType;
 
 	/**
 	 * Construct a new item scorer. LensKit's dependency injector will call this
@@ -41,13 +44,16 @@ public class TFIDFItemScorer extends AbstractItemScorer {
 	 * @param m
 	 *            The precomputed model containing the item tag vectors.
 	 */
-	public TFIDFItemScorer(TFIDFModel model,
-			CustomUserEventDAO customUserEventDAO) {
-
+	public TFIDFDistanceItemScorer(TFIDFModel model,
+			CustomUserEventDAO customUserEventDAO,
+			Long2ObjectMap<Area> allAreas, int distanceType) {
+		super(model, customUserEventDAO);
 		logger.info("Creating instance of TFIDFItemscorer");
 		this.model = model;
 		if (null == this.dao)
 			this.dao = customUserEventDAO;
+		this.allAreas = allAreas;
+		this.distanceType = distanceType;
 	}
 
 	/**
@@ -76,8 +82,40 @@ public class TFIDFItemScorer extends AbstractItemScorer {
 			// Get the item vector for this item
 			SparseVector iv = model.getItemVector(e.getKey());
 			double cos = (userVector.dot(iv)) / (iv.norm() * userVector.norm());
-			output.set(e, cos);
+			output.set(e, cos * getAverageDistance(userVector, e));
 		}
+	}
+
+	private double getAverageDistance(SparseVector userVector, VectorEntry e) {
+		double distanceSum = 0d;
+		double averageDistance = 0d;
+
+		Area itemArea = null;
+		if (null != (itemArea = allAreas.get(e.getKey()))) {
+			Geometry itemGeometry = null;
+			if (null != (itemGeometry = itemArea.getTheGeom())) {
+
+				for (VectorEntry ue : userVector.fast()) {
+					Geometry thisItemGeometry = null;
+					if (null != (thisItemGeometry = allAreas.get(ue.getKey())
+							.getTheGeom())) {
+						double distance = 0d;
+						if (distanceType == 0) {
+							distance = itemGeometry.distance(thisItemGeometry);
+						} else if (distanceType == 1) {
+							Point thisItemCentroid = thisItemGeometry
+									.getCentroid();
+							Point itemCentroid = itemGeometry.getCentroid();
+							distance = itemCentroid.distance(thisItemCentroid);
+						}
+						distanceSum = distanceSum + distance;
+					}
+				}
+				averageDistance = distanceSum / userVector.size();
+			}
+		}
+
+		return (1/averageDistance);
 	}
 
 	private SparseVector makeUserVector(long user) {
@@ -87,9 +125,9 @@ public class TFIDFItemScorer extends AbstractItemScorer {
 		CustomUserHistory<Edit> customUserHistory = null;
 		if (null == dao) {
 			logger.info("dao is null");
-		} 
+		}
 		if (null == (customUserHistory = dao.getCustomEventsForUser(user))) {
-			//logger.info("the user doesn't exist");
+			// logger.info("the user doesn't exist");
 			return SparseVector.empty();
 		} else {
 			userEvent = customUserHistory.getEventHistory();
@@ -99,10 +137,10 @@ public class TFIDFItemScorer extends AbstractItemScorer {
 		} else {
 			if (null == model.getNodesByArea()) {
 				logger.info("nodesbyarea in model is null");
-			} 
+			}
 			if (null == model.getWaysByArea()) {
 				logger.info("getWaysByArea in model is null");
-			} 
+			}
 		}
 
 		// Create a new vector over tags to accumulate the user profile

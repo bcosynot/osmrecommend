@@ -5,12 +5,17 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.springframework.stereotype.Service;
 
+import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.domain.Way;
 
 @Service
 public interface WayService {
 
 	public Iterable<Way> getAllWays();
+	
+	public Iterable<Way> getSomeWays(int limit);
+	
+	public Iterable<Way> getAllForUser(User user);
 	
 	public Way getWayById(Long id);
 	

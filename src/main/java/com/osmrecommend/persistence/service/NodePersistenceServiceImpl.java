@@ -6,15 +6,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.util.Map.Entry;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.osmrecommend.persistence.domain.Node;
 import com.osmrecommend.persistence.domain.User;
 import com.osmrecommend.persistence.repositories.NodeRepository;
-import com.osmrecommend.persistence.repositories.NodeTagRepository;
+import com.osmrecommend.persistence.repositories.UserRepository;
+import com.osmrecommend.util.ConverterUtil;
 
 @Component
 public class NodePersistenceServiceImpl implements NodeService {
@@ -23,7 +22,7 @@ public class NodePersistenceServiceImpl implements NodeService {
 	NodeRepository repo;
 	
 	@Autowired
-	NodeTagRepository tagRepo;
+	UserRepository userRepo;
 	
 	@Override
 	public Iterable<Node> getAllNodes() {
@@ -61,10 +60,16 @@ public class NodePersistenceServiceImpl implements NodeService {
 		return userIds;
 		
 	}
+	
+	@Override
+	public Iterable<Node> getAllForUser(Long userId) {
+		User user = userRepo.findOne(userId);
+		return getAllForUser(user);
+	}
 
 	@Override
-	public Iterable<Node> getAllByUser(User user) {
-		return repo.findByUser(user);
+	public Iterable<Node> getAllForUser(User user) {
+		return repo.findAllNodesForUser(user);
 	}
 
 	@Override
@@ -74,7 +79,7 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findTagsByNodeId(nodeId)) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -88,7 +93,7 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 		for(Object2ObjectMap<String, String> mapOfTags : repo.findAllTags()) {
 			
-			tags.addAll(convertMapOfTagsToCombinedList(mapOfTags));
+			tags.addAll(ConverterUtil.convertMapOfTagsToCombinedList(mapOfTags));
 			
 		}
 		
@@ -96,22 +101,5 @@ public class NodePersistenceServiceImpl implements NodeService {
 		
 	}
 
-	/**
-	 * @param mapOfTags
-	 */
-	private ObjectList<String> convertMapOfTagsToCombinedList(Object2ObjectMap<String, String> mapOfTags) {
-		
-		ObjectList<String> tags = new ObjectArrayList<String>();
-		
-		for (Entry<String, String> e : mapOfTags.entrySet()) {
-
-			tags.add(e.getKey().toLowerCase() + e.getValue().toLowerCase());
-
-		}
-		
-		return tags;
-	}
-
-	
 
 }

@@ -1,34 +1,35 @@
 package com.osmrecommend.persistence.domain;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
-import com.osmrecommend.util.HstoreUserType;
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
 @Table(name = "nodes")
-@TypeDef(name = "hstore", typeClass = HstoreUserType.class)
+@Cacheable
 public class Node implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8265855470645903224L;
+	private static final long serialVersionUID = -2973199082591265051L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +38,30 @@ public class Node implements Serializable {
 	
 	@Column(name="node_id")
 	private Long nodeId;
+
+	@Column(name = "version")
+	private Integer version;
 	
+	@OneToOne
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name = "user_id")
+	private User user;
+	
+	@Column(name = "tstamp")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date tstamp;
+	
+	@Column(name = "changeset_id")
+	private Long changesetId;
+	
+	@Column(name = "geom")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private Geometry geom;
+	
+	@Column(name = "tags")
+	private String tags;
+	
+
 	/**
 	 * @return the nodeId
 	 */
@@ -52,38 +76,17 @@ public class Node implements Serializable {
 		this.nodeId = nodeId;
 	}
 
-	@Column(name = "version")
-	private Integer version;
-	
-	//@Column(name = "user_id")
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	private User user;
-	
-	@Column(name = "tsamp")
-	private Date tstamp;
-	
-	@Column(name = "changeset_id")
-	private Long changesetId;
-	
-	@Column(name = "geom")
-	private Geometry geom;
-	
-	@Type(type = "hstore")
-	@Column(name = "tags", columnDefinition = "hstore")
-	private Object2ObjectOpenHashMap<String, String> tags = new Object2ObjectOpenHashMap<String, String>();
-
 	/**
 	 * @return the tags
 	 */
-	public Object2ObjectOpenHashMap<String, String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
 	/**
 	 * @param tags the tags to set
 	 */
-	public void setTags(Object2ObjectOpenHashMap<String, String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 
